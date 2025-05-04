@@ -1,4 +1,4 @@
-# Understanding Democracy Profiles Through Cluster Analysis
+## Understanding Democracy Profiles Through Cluster Analysis
 
 ![Democracy Dimension Profiles by Cluster](Radar_spider%20chart.png)
 
