@@ -1,6 +1,8 @@
 ## Understanding Democracy Profiles Through Cluster Analysis
 
 ![Democracy Dimension Profiles by Cluster](Radar_spider%20chart.png)
+<p><em>Figure 1: Democracy clusters showing distinct patterns across five dimensions. Each cluster represents a different regime type with characteristic dimensional profiles.</em></p>
+</div>
 
 This radar chart displays how countries cluster based on the five dimensions of democracy measured by the EIU Democracy Index. Each cluster exhibits a distinct profile across dimensions, with Cluster 2 (green) showing consistently high scores across all dimensions (typical of full democracies), while clusters like 1 and 4 demonstrate lower scores in electoral processes and civil liberties (characteristic of hybrid and authoritarian regimes).
 
