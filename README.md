@@ -1,11 +1,11 @@
 ## Understanding Democracy Profiles Through Cluster Analysis
+## Interactive Dashboard
 
+For an interactive version of these visualizations, [click here](https://rosalinatorres888.github.io/democracy-clustering-analysis/interactive_dashboard.html).
 
 <p align="center">
   <img src="images/fingerprints.png" width="800" alt="Regime Type Fingerprints (K-Means Centroids)">
 </p>
-
-
 
 
 ## Overview
@@ -17,6 +17,11 @@ This project applies unsupervised machine learning techniques to analyze the Eco
 - Hybrid regimes and transitioning countries provide the most valuable insights about democratic development
 - Different dimensions of democracy develop unevenly across countries, with electoral process and civil liberties showing the most variance between regimes
 
+<p align="center">
+  <img src="images/ARI.png" width="800" alt="Adjusted Rand Index">
+</p>
+
+
 ## Dataset
 The analysis uses the Economist Intelligence Unit's Democracy Index data, which rates countries on a scale of 0-10 across five dimensions, with an overall score determining classification as:
 - Full Democracy (8.01-10.00)
@@ -26,7 +31,10 @@ The analysis uses the Economist Intelligence Unit's Democracy Index data, which 
 
 ## Methods
 
-![Democracy Profiles by Cluster Type](democracy_profiles_by_cluster.png)
+<p align="center">
+  <img src="feature_importance.png" width="800" alt="Adjusted Rand Index">
+</p>
+
 
 ### Data Preprocessing
 - Data standardization to ensure dimensions with different scales don't dominate the analysis
