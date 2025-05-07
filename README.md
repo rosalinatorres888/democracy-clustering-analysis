@@ -1,9 +1,22 @@
 ## Understanding Democracy Profiles Through Cluster Analysis
 
-![Democracy Dimension Profiles by Cluster](images/democracy_index.png)
-<p><em>Figure 1: Democracy Index Trends (2016-2024)
-This figure illustrates the comparative democracy scores of select nations according to the Economist Intelligence Unit's Democracy Index. Norway leads globally with a score of 9.81, firmly in the "Full Democracy" category. The United States ranks 28th globally with a score of 7.85 in the "Flawed Democracy" category, a classification it has maintained since its downgrade in 2016. Honduras (5.36) operates as a "Hybrid Regime" at 89th place globally, while Hungary shows concerning democratic backsliding with a score of 3.82, placing it 55th globally and approaching authoritarian status. Global trends indicate declines in Civil Liberties (-1.00) and Electoral Process (-0.66), though Political Participation shows improvement (+0.74).</em></p>
-</div>
+## Clustering Analysis Results
+
+<p align="center">
+  <img src="images/democracy_kmeans_clustering.png" width="800" alt="Democracy Index K-Means Clustering">
+</p>
+
+### Feature Importance
+
+<p align="center">
+  <img src="images/feature_importance.png" width="700" alt="Feature Importance in Clustering">
+</p>
+
+### Comparison with Expert Classifications
+
+<p align="center">
+  <img src="images/ari_comparison.png" width="700" alt="ARI Comparison">
+</p>
 
 ## Overview
 This project applies unsupervised machine learning techniques to analyze the Economist Intelligence Unit's Democracy Index data. By using clustering algorithms (K-means and Hierarchical clustering), this analysis reveals natural groupings of countries based on five dimensions of democracy: electoral processes and pluralism, functioning of government, political participation, political culture, and civil liberties.
