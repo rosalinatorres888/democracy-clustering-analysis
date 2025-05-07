@@ -98,25 +98,28 @@
         <button class="tab-button" data-tab="radar">Regime Fingerprints</button>
     </div>
     
-    <div id="cluster-tab" class="tab-content active">
-        <h2>K-Means Clustering Results</h2>
-        <div id="cluster-chart" class="chart"></div>
-        <div class="description">
-            <h3>What is K-Means Clustering?</h3>
-            <p>K-Means clustering is an unsupervised machine learning algorithm that groups similar data points together. In this visualization, countries are positioned based on their Electoral Process and Functioning of Government scores.</p>
-            
-            <p>The clustering reveals four distinct regime types that align closely with expert classifications. Countries with similar democratic characteristics are grouped together, showing natural patterns in governance systems.</p>
-            
-            <p>Hover over data points to see detailed information about each country. You can use the dropdown above to compare algorithmic clusters with original expert classifications.</p>
-            
-            <ul>
-                <li><span class="color-dot" style="background-color: #4CAF50;"></span> <strong>Full Democracy</strong> - High scores across all dimensions</li>
-                <li><span class="color-dot" style="background-color: #2196F3;"></span> <strong>Flawed Democracy</strong> - Strong electoral process but weaker in other areas</li>
-                <li><span class="color-dot" style="background-color: #FFC107;"></span> <strong>Hybrid Regime</strong> - Uneven development across democratic dimensions</li>
-                <li><span class="color-dot" style="background-color: #F44336;"></span> <strong>Authoritarian</strong> - Low scores, particularly in electoral process</li>
-            </ul>
-        </div>
+   <div id="cluster-tab" class="tab-content active">
+    <h2>Regime Type Fingerprints (K-Means Centroids)</h2>
+    <div id="radar-chart" class="chart">
+        <!-- You would typically insert your chart via JavaScript here, but for now you can use an image -->
+        <img src="path/to/radar-chart.png" alt="Radar chart showing regime type fingerprints" width="100%">
     </div>
+    <div class="description">
+        <h3>Cluster Centroids Analysis</h3>
+        <p>This radar chart displays the average values (centroids) for each feature across regime types. Full democracies show high values across all dimensions, while authoritarian regimes have particularly low scores in Electoral Process and Civil Liberties. Hybrid regimes and flawed democracies show more intermediate patterns, with flawed democracies maintaining stronger electoral processes and civil liberties despite moderate scores in other areas.</p>
+        
+        <p>The radar chart reveals distinctive patterns that characterize each regime type:</p>
+        
+        <ul>
+            <li><span class="color-dot" style="background-color: #4CAF50;"></span> <strong>Full Democracy</strong> - High scores across all dimensions</li>
+            <li><span class="color-dot" style="background-color: #2196F3;"></span> <strong>Flawed Democracy</strong> - Strong electoral process but weaker in other areas</li>
+            <li><span class="color-dot" style="background-color: #FFC107;"></span> <strong>Hybrid Regime</strong> - Uneven development across democratic dimensions</li>
+            <li><span class="color-dot" style="background-color: #F44336;"></span> <strong>Authoritarian</strong> - Low scores, particularly in electoral process</li>
+        </ul>
+        
+        <p>This visualization complements the cluster scatter plot by showing the distinctive "fingerprint" of each regime type across all five dimensions in the Democracy Index.</p>
+    </div>
+</div>
     
     <div id="importance-tab" class="tab-content">
         <h2>Feature Importance</h2>
