@@ -1,6 +1,3 @@
-## Understanding Democracy Profiles Through Cluster Analysis
-
-## Clustering Analysis Results
 
 <p align="center">
   <img src="democracy_kmeans_clustering.png" width="800" alt="Democracy Index K-Means Clustering">
@@ -21,12 +18,18 @@
 ### Regime Category Distribution Comparison
 
 <p align="center">
-  <img src="distribution.png" width="700" alt="ARI Comparison">
+  <img src="distribution.png" width="700" alt="Regime Category Distribution">
 </p>
 
 ## Interactive Dashboard
 
 For an interactive version of these visualizations, [click here](https://rosalinatorres888.github.io/democracy-clustering-analysis/interactive_dashboard.html).
+
+<p align="center">
+  <a href="https://rosalinatorres888.github.io/democracy-clustering-analysis/interactive_dashboard.html">
+    <img src="images/interactive_dashboard_preview.png" width="800" alt="Interactive Dashboard Preview">
+  </a>
+</p>
 
 ## Overview
 This project applies unsupervised machine learning techniques to analyze the Economist Intelligence Unit's Democracy Index data. By using clustering algorithms (K-means and Hierarchical clustering), this analysis reveals natural groupings of countries based on five dimensions of democracy: electoral processes and pluralism, functioning of government, political participation, political culture, and civil liberties.
@@ -46,7 +49,9 @@ The analysis uses the Economist Intelligence Unit's Democracy Index data, which 
 
 ## Methods
 
-![Democracy Profiles by Cluster Type](democracy_profiles_by_cluster.png)
+<p align="center">
+  <img src="images/democracy_profiles_by_cluster.png" width="800" alt="Democracy Profiles by Cluster Type">
+</p>
 
 ### Data Preprocessing
 - Data standardization to ensure dimensions with different scales don't dominate the analysis
@@ -73,7 +78,9 @@ The analysis uses the Economist Intelligence Unit's Democracy Index data, which 
 - Geographic visualization of clusters
 - Analysis of boundary/transition countries
 
-![Democracy Profiles of Top Transition Countries](transition_countries_profiles.png)
+<p align="center">
+  <img src="images/transition_countries_profiles.png" width="800" alt="Democracy Profiles of Top Transition Countries">
+</p>
 
 ## Boundary Case Analysis
 This project places special emphasis on examining countries that sit between regime types, including:
@@ -88,33 +95,3 @@ The Jupyter notebook provides a complete workflow from data loading to interpret
 ```bash
 git clone https://github.com/rosalinatf/democracy-clustering-analysis.git
 cd democracy-clustering-analysis
-```
-
-2. Install required packages:
-```bash
-pip install -r requirements.txt
-```
-
-3. Run the Jupyter notebook:
-```bash
-jupyter notebook notebooks/democracy_clustering_analysis.ipynb
-```
-
-## Skills Demonstrated
-- **Data Exploration**: Thorough EDA of democratic dimension distributions
-- **Unsupervised Learning**: Applied K-means and hierarchical clustering algorithms
-- **Data Visualization**: Created interpretable visualizations of clusters 
-- **Statistical Analysis**: Analyzed feature importance and cluster separation
-- **Technical Communication**: Translated statistical findings into political insights
-
-## Future Work
-- Longitudinal analysis to track democratic changes over time
-- Inclusion of additional democracy indices for comparative analysis
-- Fuzzy clustering to better capture hybrid regime characteristics
-
-## Author
-Rosalina Torres Figueroa  
-Contact: torres.ros@northeastern.edu
-
-## License
-This project is available under the MIT License.
