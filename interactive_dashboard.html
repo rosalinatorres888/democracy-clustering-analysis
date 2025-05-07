@@ -14,11 +14,14 @@
         .chart { 
             width: 100%; 
             height: 500px; 
-            margin-bottom: 40px; 
+            margin-bottom: 20px; 
         }
         h1, h2 { 
             color: #333; 
             text-align: center;
+        }
+        h3 {
+            margin-top: 0;
         }
         .controls { 
             margin: 20px auto; 
@@ -64,6 +67,17 @@
             background: #f9f9f9;
             border-radius: 5px;
         }
+        ul {
+            margin-left: 20px;
+            padding-left: 20px;
+        }
+        .color-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -87,25 +101,59 @@
     <div id="cluster-tab" class="tab-content active">
         <h2>K-Means Clustering Results</h2>
         <div id="cluster-chart" class="chart"></div>
+        <div class="description">
+            <h3>What is K-Means Clustering?</h3>
+            <p>K-Means clustering is an unsupervised machine learning algorithm that groups similar data points together. In this visualization, countries are positioned based on their Electoral Process and Functioning of Government scores.</p>
+            
+            <p>The clustering reveals four distinct regime types that align closely with expert classifications. Countries with similar democratic characteristics are grouped together, showing natural patterns in governance systems.</p>
+            
+            <p>Hover over data points to see detailed information about each country. You can use the dropdown above to compare algorithmic clusters with original expert classifications.</p>
+            
+            <ul>
+                <li><span class="color-dot" style="background-color: #4CAF50;"></span> <strong>Full Democracy</strong> - High scores across all dimensions</li>
+                <li><span class="color-dot" style="background-color: #2196F3;"></span> <strong>Flawed Democracy</strong> - Strong electoral process but weaker in other areas</li>
+                <li><span class="color-dot" style="background-color: #FFC107;"></span> <strong>Hybrid Regime</strong> - Uneven development across democratic dimensions</li>
+                <li><span class="color-dot" style="background-color: #F44336;"></span> <strong>Authoritarian</strong> - Low scores, particularly in electoral process</li>
+            </ul>
+        </div>
     </div>
     
     <div id="importance-tab" class="tab-content">
         <h2>Feature Importance</h2>
         <div id="importance-chart" class="chart"></div>
+        <div class="description">
+            <h3>What is Feature Importance?</h3>
+            <p>Feature importance measures how much each variable contributes to the clustering outcome. Higher values indicate features that more strongly distinguish between different regime types.</p>
+            
+            <p>This analysis reveals that Electoral Process and Civil Liberties are the most influential dimensions in separating regime types, while Political Participation shows comparatively less variance between clusters.</p>
+            
+            <p>Understanding which features drive cluster formation helps identify the critical dimensions that differentiate political regimes and highlights where democratic development tends to progress or stagnate. For policymakers focused on democratic development, these key dimensions represent leverage points for potential reform efforts.</p>
+        </div>
     </div>
     
     <div id="ari-tab" class="tab-content">
-        <h2>Comparison with Expert Classifications</h2>
+        <h2>Adjusted Rand Index Comparison</h2>
         <div id="ari-chart" class="chart"></div>
+        <div class="description">
+            <h3>What is Adjusted Rand Index?</h3>
+            <p>The Adjusted Rand Index (ARI) measures the similarity between two clusterings, adjusted for chance. It ranges from -1 to 1, where:</p>
+            
+            <ul>
+                <li>1 indicates perfect agreement between clusterings</li>
+                <li>0 indicates random clustering</li>
+                <li>Negative values indicate worse than random clustering</li>
+            </ul>
+            
+            <p>Higher ARI values indicate better alignment between the algorithmic clusters and expert-defined regime classifications. The K-Means algorithm shows stronger agreement with expert classifications (0.78) compared to Hierarchical clustering (0.72), suggesting it better captures the natural groupings in the democracy data.</p>
+        </div>
     </div>
     
     <div id="radar-tab" class="tab-content">
         <h2>Regime Type Fingerprints (K-Means Centroids)</h2>
         <div id="radar-chart" class="chart"></div>
         <div class="description">
-            <p>This radar chart displays the average values (centroids) for each feature across regime types. 
-            Full democracies show high values across all dimensions, while authoritarian regimes have 
-            particularly low scores in Electoral Process and Civil Liberties.</p>
+            <h3>Cluster Centroids Analysis</h3>
+            <p>This radar chart displays the average values (centroids) for each feature across regime types. Full democracies show high values across all dimensions, while authoritarian regimes have particularly low scores in Electoral Process and Civil Liberties. Hybrid regimes and flawed democracies show more intermediate patterns, with flawed democracies maintaining stronger electoral processes and civil liberties despite moderate scores in other areas.</p>
         </div>
     </div>
     
