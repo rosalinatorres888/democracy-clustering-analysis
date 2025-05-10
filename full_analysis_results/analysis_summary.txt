@@ -1,0 +1,28 @@
+=== Human Activity Analysis using Permutation Entropy ===
+
+Dataset Summary:
+Total data points: 6480
+Subjects: 15
+Activities: climbingdown, climbingup, running, walking
+Axes: attr_x, attr_y, attr_z
+Dimensions: 3, 4, 5, 6
+Delays: 1, 2, 3
+Signal lengths: 1024, 2048, 4096
+
+Key Findings:
+1. Optimal parameters for distinguishing activities:
+   Dimension: 3.0, Delay: 1.0
+   (F-statistic: 0.7022)
+
+2. Activity discrimination:
+   ANOVA for PE: F=0.7022, p=0.5510
+   ANOVA for Complexity: F=0.7022, p=0.5510
+
+3. Best axis for activity discrimination: attr_z
+   (F-statistic: 0.8930)
+
+4. Activity characteristics (Dimension=3, Delay=1):
+   climbingdown: PE=0.9995, Complexity=0.4997
+   climbingup: PE=0.9994, Complexity=0.4997
+   running: PE=0.9994, Complexity=0.4997
+   walking: PE=0.9995, Complexity=0.4997

@@ -1,0 +1,8 @@
+dash==2.9.3
+plotly==5.14.1
+pandas==2.0.1
+numpy==1.24.3
+dash-tools==1.10.0
+gunicorn==20.1.0
+scikit-learn==1.2.2
+jupyter==1.0.0

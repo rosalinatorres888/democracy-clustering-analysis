@@ -1,0 +1,31 @@
+country,democracy_index,electoral_process_and_pluralism,functioning_of_government,political_participation,political_culture,civil_liberties,category
+Norway,9.87,10.00,9.64,10.00,10.00,9.71,Full Democracy
+New Zealand,9.61,10.00,9.29,8.89,10.00,9.71,Full Democracy
+Iceland,9.58,10.00,9.29,8.89,10.00,9.71,Full Democracy
+Sweden,9.39,9.58,9.64,8.33,10.00,9.41,Full Democracy
+Finland,9.30,10.00,8.93,8.33,9.38,9.71,Full Democracy
+Denmark,9.22,10.00,9.29,8.33,9.38,9.12,Full Democracy
+Ireland,9.19,9.58,7.86,8.33,10.00,9.71,Full Democracy
+Australia,9.09,10.00,8.93,7.78,8.75,9.71,Full Democracy
+Netherlands,9.00,9.58,9.29,8.33,8.13,9.41,Full Democracy
+Taiwan,8.99,9.58,9.64,7.22,8.75,9.41,Full Democracy
+United States,7.85,9.17,6.43,7.78,6.25,8.24,Flawed Democracy
+United Kingdom,8.10,9.58,7.50,7.78,7.50,8.24,Flawed Democracy
+France,7.99,9.58,6.79,7.78,6.88,8.82,Flawed Democracy
+South Korea,8.01,9.17,7.86,7.22,7.50,8.24,Flawed Democracy
+Japan,8.13,8.75,8.21,6.67,8.13,8.82,Flawed Democracy
+Italy,7.68,9.58,6.07,7.22,6.88,8.24,Flawed Democracy
+India,6.91,8.75,7.14,6.67,5.00,6.76,Flawed Democracy
+Brazil,6.86,9.58,5.36,6.11,5.00,7.65,Flawed Democracy
+Poland,6.09,7.83,5.36,5.56,4.38,7.06,Flawed Democracy
+Hungary,6.12,7.83,5.71,5.00,5.63,6.47,Flawed Democracy
+Mexico,6.07,7.50,5.36,7.22,4.38,5.59,Flawed Democracy
+Ukraine,5.78,8.83,2.71,6.67,5.00,5.29,Hybrid Regime
+Turkey,5.04,5.83,5.00,5.56,5.00,3.24,Hybrid Regime
+Singapore,6.03,4.33,7.86,5.56,6.25,6.18,Hybrid Regime
+Bangladesh,5.44,7.42,5.00,5.00,4.38,5.00,Hybrid Regime
+Russia,2.94,2.17,1.79,5.00,3.13,2.94,Authoritarian
+China,1.94,0.00,4.29,3.33,2.50,1.18,Authoritarian
+Iran,1.66,0.00,2.86,3.33,2.50,1.18,Authoritarian
+Saudi Arabia,1.93,0.00,3.21,2.22,4.38,1.76,Authoritarian
+North Korea,1.08,0.00,2.50,1.67,1.25,0.00,Authoritarian
