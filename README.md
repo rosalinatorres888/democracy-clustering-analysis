@@ -8,7 +8,7 @@ Using K-means and hierarchical clustering to analyze democracy data and reveal i
 
 This visualization shows the democracy index by country, revealing patterns of democratic development across the globe:
 
-![Democracy Index by Country](democracy_map.png)
+![Democracy Index by Country](docs/democracy_map.png)
 
 ## About This Project
 
