@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Democracy Clustering Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background: #ffffff;
+            color: #3949ab;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .contact-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .contact-item {
+            display: flex;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .contact-label {
+            background-color: #333;
+            color: white;
+            padding: 6px 12px;
+        }
+        .contact-value {
+            padding: 6px 12px;
+            color: white;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Democracy Clustering Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .header {
+            background: #ffffff;
+            color: #3949ab;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .contact-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        .contact-item {
+            display: flex;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .contact-label {
+            background-color: #333;
+            color: white;
+            padding: 6px 12px;
+        }
+        .contact-value {
+            padding: 6px 12px;
+            color: white;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .section-number {
+            font-size: 3rem;
+            color: #3949ab;
+            opacity: 0.2;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            color: #3949ab;
+            font-weight: bold;
+        }
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+        }
+        .viz-container {
+            height: 400px;
+            margin-top: 20px;
+        }
+        .control-group {
+            margin-bottom: 20px;
+        }
+        select {
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .button-group {
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 8px 16px;
+            margin-right: 10px;
+            background-color: white;
+            border: 1px solid #3949ab;
+            color: #3949ab;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        button.active {
+            background-color: #3949ab;
+            color: white;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>Clustering Democracy: Unsupervised Machine Learning Analyzes of Global Governance</h1>
+        <div style="margin-top: 20px;">
+            <div style="font-size: 1.4rem; margin-bottom: 5px;">Rosalina Torres</div>
+            <div>Data Analytics Engineer | MS Candidate</div>
+        </div>
+    </div>
+    <!--
+    <div class="container">
+        <div class="contact-bar">
+            <div class="contact-item">
+                <span class="contact-label">Profile views</span>
+                <span class="contact-value" style="background-color: #ec407a;">146</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">LinkedIn</span>
+                <span class="contact-value" style="background-color: #0077b5;">Connect</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">Email</span>
+                <span class="contact-value" style="background-color: #d14836;">Contact</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">Languages</span>
+                <span class="contact-value" style="background-color: #795548;">Bilingual</span>
+            </div>
+        </div>
+    </div> 
+    -->
+  
+        <!-- Country Explorer -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">01</div>
+                <div class="section-title">Country Explorer</div>
+            </div>
+            <div class="card">
+                <h3>Explore Democratic Dimensions by Country</h3>
+                <div class="control-group">
+                    <label for="country-selector" style="display: block; margin-bottom: 8px;">Select a country:</label>
+                    <select id="country-selector"></select>
+                </div>
+                <div id="country-info" style="margin: 15px 0; padding: 15px; border-radius: 8px; background-color: #f5f5f5;"></div>
+                <div id="radar-chart" class="viz-container"></div>
+            </div>
+        </div>
+        
+        <!-- US Democracy Decline -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">02</div>
+                <div class="section-title">US Democracy Decline</div>
+            </div>
+            <div class="card">
+                <h3>US Downgrade from Full to Flawed Democracy</h3>
+                <div class="button-group">
+                    <button class="viz-button active" data-view="categories">By Category</button>
+                    <button class="viz-button" data-view="trend">Historical Trend</button>
+                </div>
+                <div id="us-decline-chart" class="viz-container"></div>
+            </div>
+        </div>
+        
+        <!-- Democracy Clustering -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">03</div>
+                <div class="section-title">Democracy Clustering</div>
+            </div>
+            <div class="card">
+                <h3>Machine Learning Discovered Clusters</h3>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: center;">
+                        <input type="checkbox" id="show-clusters" checked style="margin-right: 8px;">
+                        Show Cluster Boundaries
+                    </label>
+                </div>
+                <div id="clustering-chart" class="viz-container"></div>
+            </div>
+        </div>
+        
+        <!-- Democracy Trends -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">04</div>
+                <div class="section-title">Democracy Score Trends</div>
+            </div>
+            <div class="card">
+                <h3>Democracy Index Trends (2017-2024)</h3>
+                <div class="button-group">
+                    <button class="trend-button active" data-trend="all">All Countries</button>
+                    <button class="trend-button" data-trend="us-norway">US vs Norway</button>
+                    <button class="trend-button" data-trend="borderline">Borderline Cases</button>
+                </div>
+                <div id="trends-chart" class="viz-container"></div>
+            </div>
+        </div>
+        
+        <!-- Key Insights Section -->
+        <div class="section">
+            <div class="section-header">
+                <div class="section-number">05</div>
+                <div class="section-title">Key Research Insights</div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div class="card">
+                    <h3>Natural Patterns in Data</h3>
+                    <p>Machine learning algorithms naturally discovered four distinct clusters that closely align with expert-defined regime types, validating that democratic classifications reflect inherent patterns in political data.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Critical Dimensions</h3>
+                    <p>Civil liberties (0.90) and electoral processes (0.86) emerged as the most powerful predictors of regime type in clustering analysis, showing which aspects most strongly differentiate political systems.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Borderline Cases</h3>
+                    <p>Countries like Hungary, Poland and Mexico occupy a statistical gray zone between flawed democracies and hybrid regimes, suggesting AI could serve as an early warning system for democratic backsliding.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div>
+            <p>Data source: Economist Intelligence Unit Democracy Index</p>
+            <p>Compiled by Rosalina Torres as part of democracy clustering analysis project</p>
+            <p>Data Analytics Engineer | MS Candidate</p>
+            <p>© 2025</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data for the visualizations
+        const regimeColors = {
+            'Full Democracy': '#4CAF50',
+            'Flawed Democracy': '#2196F3',
+            'Hybrid Regime': '#FFC107',
+            'Authoritarian': '#F44336'
+        };
+
+        // Country data
+        const countryData = {
+            'Norway': {
+                regime: 'Full Democracy',
+                score: 9.81,
+                dimensions: {
+                    electoral: 10.00,
+                    functioning: 9.64,
+                    participation: 10.00,
+                    culture: 10.00,
+                    liberties: 9.71
+                },
+                color: '#4CAF50',
+                yearlyScores: [9.80, 9.87, 9.81, 9.81, 9.81, 9.81, 9.75, 9.81]
+            },
+            'New Zealand': {
+                regime: 'Full Democracy',
+                score: 9.61,
+                dimensions: {
+                    electoral: 10.00,
+                    functioning: 9.29,
+                    participation: 8.89,
+                    culture: 10.00,
+                    liberties: 9.71
+                },
+                color: '#4CAF50',
+                yearlyScores: [9.26, 9.26, 9.37, 9.26, 9.26, 9.37, 9.61, 9.61]
+            },
+            'United States': {
+                regime: 'Flawed Democracy',
+                score: 7.85,
+                dimensions: {
+                    electoral: 9.17,
+                    functioning: 6.43,
+                    participation: 7.78,
+                    culture: 6.25,
+                    liberties: 8.24
+                },
+                color: '#2196F3',
+                yearlyScores: [8.05, 7.98, 7.98, 7.96, 7.96, 7.92, 7.85, 7.85]
+            },
+            'France': {
+                regime: 'Flawed Democracy',
+                score: 7.99,
+                dimensions: {
+                    electoral: 9.58,
+                    functioning: 6.79,
+                    participation: 7.78,
+                    culture: 6.88,
+                    liberties: 8.82
+                },
+                color: '#2196F3',
+                yearlyScores: [8.12, 8.07, 7.92, 8.12, 8.08, 7.99, 7.99, 7.99]
+            },
+            'Hungary': {
+                regime: 'Flawed Democracy',
+                score: 6.12,
+                dimensions: {
+                    electoral: 7.83,
+                    functioning: 5.71,
+                    participation: 5.00,
+                    culture: 5.63,
+                    liberties: 6.47
+                },
+                color: '#2196F3',
+                borderline: true,
+                yearlyScores: [7.00, 6.84, 6.64, 6.63, 6.56, 6.50, 6.12, 6.12]
+            },
+            'Poland': {
+                regime: 'Flawed Democracy',
+                score: 6.09,
+                dimensions: {
+                    electoral: 7.83,
+                    functioning: 5.36,
+                    participation: 5.56,
+                    culture: 4.38,
+                    liberties: 7.06
+                },
+                color: '#2196F3',
+                borderline: true,
+                yearlyScores: [7.09, 6.67, 6.67, 6.62, 6.57, 6.49, 6.09, 6.09]
+            },
+            'Turkey': {
+                regime: 'Hybrid Regime',
+                score: 5.04,
+                dimensions: {
+                    electoral: 6.50,
+                    functioning: 5.00,
+                    participation: 5.56,
+                    culture: 5.00,
+                    liberties: 3.24
+                },
+                color: '#FFC107',
+                yearlyScores: [5.12, 5.04, 4.88, 4.37, 4.09, 4.09, 5.04, 5.04]
+            },
+            'Russia': {
+                regime: 'Authoritarian',
+                score: 2.94,
+                dimensions: {
+                    electoral: 2.17,
+                    functioning: 1.79,
+                    participation: 5.00,
+                    culture: 3.13,
+                    liberties: 2.94
+                },
+                color: '#F44336',
+                yearlyScores: [3.24, 3.19, 3.11, 3.11, 3.24, 3.24, 2.94, 2.94]
+            }
+        };
+
+        // 1. Country Explorer v3
+        function initCountryExplorer() {
+            // Populate country dropdown
+            const countrySelector = document.getElementById('country-selector');
+            if (!countrySelector) return;
+            
+            const sortedCountries = Object.keys(countryData).sort();
+            sortedCountries.forEach(country => {
+                const option = document.createElement('option');
+                option.value = country;
+                option.textContent = country + (countryData[country].borderline ? ' (Borderline)' : '');
+                countrySelector.appendChild(option);
+            });
+
+            // Initial country info and radar chart
+            updateCountryInfo('Norway');
+            createCountryRadar('Norway');
+
+            // Add event listener for country changes
+            countrySelector.addEventListener('change', function() {
+                updateCountryInfo(this.value);
+                createCountryRadar(this.value);
+            });
+        }
+
+        function updateCountryInfo(country) {
+            const countryInfo = document.getElementById('country-info');
+            if (!countryInfo) return;
+            
+            const data = countryData[country];
+            const color = data.color;
+            const backgroundColor = `${color}20`;  // 20% opacity
+            
+            let probabilityText = '';
+            if (data.borderline) {
+                probabilityText = `<p style="font-style:italic;color:#666;">This country sits at the boundary between Flawed Democracy and Hybrid Regime</p>`;
+            }
+            
+            countryInfo.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                    <h4 style="margin:0;color:${color}">${country}</h4>
+                    <span style="background-color:${color};color:white;padding:4px 8px;border-radius:4px;">${data.score.toFixed(2)}</span>
+                </div>
+                <p><strong>Regime Type:</strong> ${data.regime}</p>
+                ${probabilityText}
+            `;
+            
+            countryInfo.style.backgroundColor = backgroundColor;
+        }
+
+        function createCountryRadar(country) {
+            const data = countryData[country];
+            
+            const radarData = [{
+                type: 'scatterpolar',
+                r: [
+                    data.dimensions.electoral,
+                    data.dimensions.functioning,
+                    data.dimensions.participation,
+                    data.dimensions.culture,
+                    data.dimensions.liberties
+                ],
+                theta: [
+                    'Electoral Process',
+                    'Functioning of Govt',
+                    'Political Participation',
+                    'Political Culture',
+                    'Civil Liberties'
+                ],
+                fill: 'toself',
+                name: country,
+                line: { color: data.color },
+                fillcolor: data.color + '50'  // 50% opacity
+            }];
+            
+            const layout = {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 10]
+                    }
+                },
+                showlegend: false,
+                margin: { t: 30, b: 30, l: 40, r: 40 }
+            };
+            
+            Plotly.newPlot('radar-chart', radarData, layout);
+        }
+
+        // 2. US Democracy Decline v11
+        function initUSDemocracyDecline() {
+            const buttons = document.querySelectorAll('.viz-button');
+            if (buttons.length === 0) return;
+            
+            // Initial view
+            createUSDemocracyChart('categories');
+            
+            // Add event listeners for buttons
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createUSDemocracyChart(this.dataset.view);
+                });
+            });
+        }
+
+        function createUSDemocracyChart(view) {
+            if (view === 'categories') {
+                const usData = countryData['United States'];
+                
+                const data = [{
+                    type: 'bar',
+                    x: ['Electoral<br>Process', 'Functioning<br>of Govt', 'Political<br>Participation', 'Political<br>Culture', 'Civil<br>Liberties'],
+                    y: [
+                        usData.dimensions.electoral, 
+                        usData.dimensions.functioning, 
+                        usData.dimensions.participation, 
+                        usData.dimensions.culture, 
+                        usData.dimensions.liberties
+                    ],
+                    marker: {
+                        color: [
+                            '#4CAF50', // Strong - Electoral Process
+                            '#F44336', // Weak - Functioning
+                            '#2196F3', // Medium - Participation
+                            '#F44336', // Weak - Culture
+                            '#4CAF50'  // Strong - Civil Liberties
+                        ]
+                    },
+                    text: [
+                        usData.dimensions.electoral.toFixed(2), 
+                        usData.dimensions.functioning.toFixed(2), 
+                        usData.dimensions.participation.toFixed(2), 
+                        usData.dimensions.culture.toFixed(2), 
+                        usData.dimensions.liberties.toFixed(2)
+                    ],
+                    textposition: 'auto'
+                }];
+                
+                const layout = {
+                    title: 'US Democracy Index by Category',
+                    yaxis: { 
+                        range: [0, 10],
+                        title: 'Score (0-10)'
+                    },
+                    annotations: [{
+                        x: 1,
+                        y: 6.43,
+                        text: 'Weak areas caused<br>the downgrade',
+                        showarrow: true,
+                        arrowhead: 2,
+                        ax: 30,
+                        ay: -30
+                    }]
+                };
+                
+                Plotly.newPlot('us-decline-chart', data, layout);
+            } else {
+                const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+                const usScores = [8.05, 7.98, 7.98, 7.96, 7.96, 7.92, 7.85, 7.85, 7.85, 7.85];
+                
+                const data = [{
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    x: years,
+                    y: usScores,
+                    line: { color: '#2196F3', width: 3 },
+                    name: 'US Democracy Index'
+                }];
+                
+                // Add threshold lines
+                data.push({
+                    type: 'scatter',
+                    mode: 'lines',
+                    x: years,
+                    y: Array(years.length).fill(8.01),
+                    line: { color: '#4CAF50', width: 1, dash: 'dash' },
+                    name: 'Full Democracy Threshold'
+                });
+                
+                const layout = {
+                    title: 'US Democracy Index Trend (2015-2024)',
+                    yaxis: { 
+                        range: [7.5, 8.5],
+                        title: 'Democracy Index Score'
+                    },
+                    xaxis: {
+                        title: 'Year'
+                    },
+                    annotations: [{
+                        x: 2016,
+                        y: 7.98,
+                        text: 'Downgrade to<br>Flawed Democracy',
+                        showarrow: true,
+                        arrowhead: 2,
+                        ax: 0,
+                        ay: -40
+                    }]
+                };
+                
+                Plotly.newPlot('us-decline-chart', data, layout);
+            }
+        }
+
+        // 3. Democracy Clustering v3
+        function initDemocracyClustering() {
+            const clusterToggle = document.getElementById('show-clusters');
+            if (!clusterToggle) return;
+            
+            createClusteringChart(true);
+            
+            clusterToggle.addEventListener('change', function() {
+                createClusteringChart(this.checked);
+            });
+        }
+
+        function createClusteringChart(showClusters) {
+            // Create data for scatter plot
+            const data = [];
+            
+            // Create traces for each regime type
+            const regimeTypes = ['Full Democracy', 'Flawed Democracy', 'Hybrid Regime', 'Authoritarian'];
+            
+            regimeTypes.forEach(regime => {
+                const countries = Object.keys(countryData).filter(c => countryData[c].regime === regime);
+                
+                data.push({
+                    type: 'scatter',
+                    mode: 'markers+text',
+                    x: countries.map(c => countryData[c].dimensions.electoral),
+                    y: countries.map(c => countryData[c].dimensions.liberties),
+                    text: countries,
+                    textposition: 'top',
+                    marker: {
+                        size: countries.map(c => countryData[c].score * 2),
+                        color: regimeColors[regime],
+                        line: {
+                            width: countries.map(c => countryData[c].borderline ? 2 : 0),
+                            color: countries.map(c => countryData[c].borderline ? '#FF5722' : regimeColors[regime])
+                        }
+                    },
+                    name: regime
+                });
+            });
+            
+            // Create layout
+            const layout = {
+                title: 'Democracy Clustering by Key Dimensions',
+                xaxis: {
+                    title: 'Electoral Process',
+                    range: [0, 10]
+                },
+                yaxis: {
+                    title: 'Civil Liberties',
+                    range: [0, 10]
+                },
+                legend: {
+                    orientation: 'h',
+                    y: -0.2
+                },
+                hovermode: 'closest'
+            };
+            
+            // Add cluster boundaries if requested
+            if (showClusters) {
+                layout.shapes = [
+                    // Full Democracy
+                    {
+                        type: 'line',
+                        x0: 0, y0: 8.01,
+                        x1: 10, y1: 8.01,
+                        line: { color: regimeColors['Full Democracy'], dash: 'dash', width: 1 }
+                    },
+                    {
+                        type: 'line',
+                        x0: 8.01, y0: 0,
+                        x1: 8.01, y1: 10,
+                        line: { color: regimeColors['Full Democracy'], dash: 'dash', width: 1 }
+                    },
+                    // Flawed Democracy
+                    {
+                        type: 'line',
+                        x0: 0, y0: 6.01,
+                        x1: 10, y1: 6.01,
+                        line: { color: regimeColors['Flawed Democracy'], dash: 'dash', width: 1 }
+                    },
+                    {
+                        type: 'line',
+                        x0: 6.01, y0: 0,
+                        x1: 6.01, y1: 10,
+                        line: { color: regimeColors['Flawed Democracy'], dash: 'dash', width: 1 }
+                    },
+                    // Hybrid Regime
+                    {
+                        type: 'line',
+                        x0: 0, y0: 4.01,
+                        x1: 10, y1: 4.01,
+                        line: { color: regimeColors['Hybrid Regime'], dash: 'dash', width: 1 }
+                    },
+                    {
+                        type: 'line',
+                        x0: 4.01, y0: 0,
+                        x1: 4.01, y1: 10,
+                        line: { color: regimeColors['Hybrid Regime'], dash: 'dash', width: 1 }
+                    }
+                ];
+            }
+            
+            Plotly.newPlot('clustering-chart', data, layout);
+        }
+
+        // 4. Democracy Score Trends
+        function initDemocracyTrends() {
+            const buttons = document.querySelectorAll('.trend-button');
+            if (buttons.length === 0) return;
+            
+            // Initial view
+            createTrendsChart('all');
+            
+            // Add event listeners for buttons
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    buttons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createTrendsChart(this.dataset.trend);
+                });
+            });
+        }
+
+        function createTrendsChart(trendType) {
+            const years = [2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+            const data = [];
+            
+            // Add threshold lines
+            data.push({
+                type: 'scatter',
+                mode: 'lines',
+                x: years,
+                y: Array(years.length).fill(8.01),
+                line: { color: regimeColors['Full Democracy'], dash: 'dash', width: 1 },
+                name: 'Full Democracy Threshold'
+            });
+            
+            data.push({
+                type: 'scatter',
+                mode: 'lines',
+                x: years,
+                y: Array(years.length).fill(6.01),
+                line: { color: regimeColors['Flawed Democracy'], dash: 'dash', width: 1 },
+                name: 'Flawed Democracy Threshold'
+            });
+            
+            // Add countries based on trend type
+            if (trendType === 'all' || trendType === 'us-norway') {
+                data.push({
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    x: years,
+                    y: countryData['Norway'].yearlyScores,
+                    line: { color: regimeColors['Full Democracy'], width: trendType === 'us-norway' ? 3 : 2 },
+                    marker: { size: trendType === 'us-norway' ? 8 : 6 },
+                    name: 'Norway'
+                });
+            }
+            
+            // Add US
+            data.push({
+                type: 'scatter',
+                mode: 'lines+markers',
+                x: years,
+                y: countryData['United States'].yearlyScores,
+                line: { color: regimeColors['Flawed Democracy'], width: 3 },
+                marker: { size: 8 },
+                name: 'United States'
+            });
+            
+            if (trendType === 'all') {
+                // Add more countries
+                ['New Zealand', 'France'].forEach(country => {
+                    if (countryData[country]) {
+                        data.push({
+                            type: 'scatter',
+                            mode: 'lines+markers',
+                            x: years,
+                            y: countryData[country].yearlyScores,
+                            line: { color: countryData[country].color, width: 2 },
+                            marker: { size: 6 },
+                            name: country
+                        });
+                    }
+                });
+            }
+            
+            if (trendType === 'borderline') {
+                // Add borderline countries
+                Object.keys(countryData).forEach(country => {
+                    if (countryData[country].borderline) {
+                        data.push({
+                            type: 'scatter',
+                            mode: 'lines+markers',
+                            x: years,
+                            y: countryData[country].yearlyScores,
+                            line: { color: '#FF5722', width: 2 },
+                            marker: { size: 6 },
+                            name: country
+                        });
+                    }
+                });
+            }
+            
+            const layout = {
+                title: 'Democracy Index Trends (2017-2024)',
+                xaxis: { title: 'Year' },
+                yaxis: { 
+                    title: 'Democracy Index Score',
+                    range: [4, 10]
+                },
+                legend: {
+                    orientation: 'h',
+                    y: -0.2
+                }
+            };
+            
+            Plotly.newPlot('trends-chart', data, layout);
+        }
+
+        // Initialize all visualizations when the page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            initCountryExplorer();
+            initUSDemocracyDecline();
+            initDemocracyClustering();
+            initDemocracyTrends();
+        });
+    </script>
+</body>
+</html>
