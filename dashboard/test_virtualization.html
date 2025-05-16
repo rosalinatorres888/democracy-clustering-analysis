@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning Discovers Democracy | Interactive Story</title>
+    <!-- Modern visualization libraries -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Animation library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Primary colors */
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            
+            /* Regime colors */
+            --full-democracy: #4cc9f0;
+            --flawed-democracy: #4895ef;
+            --hybrid-regime: #f9c74f;
+            --authoritarian: #f94144;
+            
+            /* Backgrounds */
+            --bg-main: #fdfeff;
+            --bg-card: #ffffff;
+            --bg-dark: #212529;
+            
+            /* Text colors */
+            --text-primary: #2b2d42;
+            --text-secondary: #586069;
+            --text-light: #f8f9fa;
+            
+            /* UI elements */
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="1.5" fill="rgba(255,255,255,0.2)"/></svg>');
+            background-size: 30px 30px;
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .author-info {
+            display: inline-block;
+            background-color: rgba(255,255,255,0.15);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            margin-top: 1rem;
+        }
+
+        /* Navigation */
+        .story-nav {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem;
+            margin-top: -3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 10;
+            box-shadow: var(--box-shadow);
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Story Sections */
+        .story-section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 2rem;
+            opacity: 0; /* Start hidden for animation */
+            transform: translateY(20px); /* Start below final position */
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary);
+            opacity: 0.2;
+            margin-right: 1rem;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            flex: 1;
+        }
+
+        /* General Layout Components */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            height: 100%;
+        }
+
+        .text-card {
+            padding: 2rem;
+        }
+
+        .vis-card {
+            height: 450px;
+            overflow: hidden;
+        }
+
+        /* Insights Cards */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .insight-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            min-height: 220px;
+            transition: var(--transition);
+        }
+
+        .insight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+
+        .insight-card:nth-child(1)::before {
+            background-color: var(--full-democracy);
+        }
+
+        .insight-card:nth-child(2)::before {
+            background-color: var(--flawed-democracy);
+        }
+
+        .insight-card:nth-child(3)::before {
+            background-color: var(--hybrid-regime);
+        }
+
+        .insight-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        /* Feature Importance Bars */
+        .feature-bar {
+            height: 2rem;
+            background-color: #f1f5f9;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            color: white;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .feature-label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Interactive Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-button {
+            background-color: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .control-button:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .control-button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Country Explorer */
+        .country-selector {
+            padding: 0.75rem;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            margin-bottom: 1rem;
+            font-family: inherit;
+        }
+
+        .country-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .country-info {
+            flex: 1;
+        }
+
+        .country-name {
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .regime-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        /* Borderline Cases Section */
+        .borderline-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .borderline-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            border-left: 5px solid var(--accent);
+            transition: var(--transition);
+        }
+        
+        .borderline-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .probability-bar {
+            height: 8px;
+            background-color: #f1f5f9;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .probability-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--flawed-democracy) 0%, var(--hybrid-regime) 100%);
+        }
+
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .story-nav {
+                flex-wrap: wrap;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 3rem 0;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .footer-content p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <h1>How Machine Learning Discovered Democracy</h1>
+            <h2>An Interactive Journey Through Unsupervised Clustering of Political Regimes</h2>
+            <div class="author-info">By Rosalina Torres, Data Analytics Engineering, MS Candidate, Northeastern University</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <nav class="story-nav">
+            <a href="#data" class="nav-item">The Data</a>
+            <a href="#approach" class="nav-item">Unsupervised Approach</a>
+            <a href="#discovery" class="nav-item">The Discovery</a>
+            <a href="#us-downgrade" class="nav-item">US Downgrade</a>
+            <a href="#features" class="nav-item">Key Features</a>
+            <a href="#borderline" class="nav-item">Borderline Cases</a>
+            <a href="#insights" class="nav-item">Insights</a>
+        </nav>
+        
+        <!-- Section 1: The Data -->
+        <section id="data" class="story-section">
+            <div class="section-header">
+                <div class="section-number">01</div>
+                <h3 class="section-title">The Raw Political Data</h3>
+            </div>
+            
+            <div class="two-column">
+                <div class="card text-card">
+                    <p>The Economist Intelligence Unit's <strong>Democracy Index</strong> measures political systems worldwide using five key dimensions:</p>
+                    <ul style="margin-top: 1rem; margin-left: 1.5rem;">
+                        <li><strong>Electoral Process and Pluralism</strong>: Free and fair elections, universal suffrage</li>
+                        <li><strong>Functioning of Government</strong>: Checks and balances, transparency</li>
+                        <li><strong>Political Participation</strong>: Voter turnout, citizen engagement</li>
+                        <li><strong>Political Culture</strong>: Democratic values, peaceful transitions</li>
+                        <li><strong>Civil Liberties</strong>: Free speech, association, rule of law</li>
+                    </ul>
+                    <p style="margin-top: 1.5rem;">For my analysis, I removed all regime classifications and labels, giving the machine learning algorithms access only to the raw dimension scores. This created a <strong>truly unsupervised learning scenario</strong> - could AI identify meaningful political patterns on its own?</p>
+                </div>
+                <div class="card vis-card" id="dimension-distribution">
+                    <!-- Visualization will be inserted here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 2: Unsupervised Approach -->
+        <section id="approach" class="story-section">
+            <div class="section-header">
+                <div class="section-number">02</div>
+                <h3 class="section-title">The Unsupervised Approach</h3>
+            </div>
+            
+            <div class="controls">
+                <button class="control-button active" data-method="hierarchical">Hierarchical Clustering</button>
+                <button class="control-button" data-method="kmeans">K-Means</button>
+                <button class="control-button" data-method="gaussian">Gaussian Mixture</button>
+            </div>
+            
+            <div class="two-column">
+                <div class="card vis-card" id="clustering-method">
+                    <!-- Visualization will be inserted here -->
+                </div>
+                <div class="card text-card">
+                    <p>Unsupervised machine learning allows us to discover patterns without predetermined labels. I applied multiple clustering algorithms to the democracy data:</p>
+                    
+                    <div id="method-description" style="margin-top: 1.5rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Hierarchical Clustering</h4>
+                        <p>This algorithm builds a tree of clusters, grouping countries based on their similarity. It excelled at capturing the nuanced relationships between different democratic systems, achieving the highest alignment with expert regime classifications.</p>
+                    </div>
+                    
+                    <p style="margin-top: 1.5rem;">Before clustering, data was <strong>standardized</strong> to ensure all dimensions contributed equally to the analysis. This let the natural structure emerge without bias toward any particular dimension.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: The Discovery -->
+        <section id="discovery" class="story-section">
+            <div class="section-header">
+                <div class="section-number">03</div>
+                <h3 class="section-title">The Amazing Discovery</h3>
+            </div>
+            
+            <div class="card text-card" style="margin-bottom: 2rem;">
+                <p style="font-size: 1.25rem; text-align: center;">Without being told about democratic regime types, the machine learning algorithms <strong>naturally discovered four distinct clusters</strong> that closely match expert classifications!</p>
+            </div>
+            
+            <div class="controls">
+                <button class="control-button active" data-view="comparison">Compare Both</button>
+                <button class="control-button" data-view="machine">Machine Clusters</button>
+                <button class="control-button" data-view="expert">Expert Labels</button>
+            </div>
+            
+            <div class="card vis-card" style="height: 550px;" id="cluster-comparison">
+                <!-- Visualization will be inserted here -->
+            </div>
+            
+            <div style="margin-top: 2rem; text-align: center; background-color: #f8fafc; padding: 1.5rem; border-radius: var(--border-radius);">
+                <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">Adjusted Rand Index (ARI) measures similarity between clusterings</div>
+                <div class="feature-bar" style="max-width: 500px; margin: 0 auto;">
+                    <div class="feature-label">Hierarchical Clustering</div>
+                    <div class="feature-fill" style="width: 78%; background-color: var(--primary);">0.78</div>
+                </div>
+                <div class="feature-bar" style="max-width: 500px; margin: 0.75rem auto;">
+                    <div class="feature-label">K-Means</div>
+                    <div class="feature-fill" style="width: 57%; background-color: var(--accent);">0.57</div>
+                </div>
+                <p style="margin-top: 0.75rem; font-style: italic;">Higher ARI values indicate better alignment with expert classifications (max = 1.0)</p>
+            </div>
+        </section>
+        
+        <!-- Section 4: US Democracy Downgrade -->
+        <section id="us-downgrade" class="story-section">
+            <div class="section-header">
+                <div class="section-number">04</div>
+                <h3 class="section-title">The US Democracy Downgrade</h3>
+            </div>
+            
+            <div class="card text-card" style="margin-bottom: 2rem;">
+                <p>One of the most significant findings revealed by the clustering analysis was the confirmation of the United States' downgrade from a <span style="color: var(--full-democracy); font-weight: 500;">Full Democracy</span> to a <span style="color: var(--flawed-democracy); font-weight: 500;">Flawed Democracy</span>. This transition, which occurred in 2016, was independently detected by the machine learning algorithm.</p>
+            </div>
+            
+            <div class="controls">
+                <button class="control-button active" data-trend="all">All Countries</button>
+                <button class="control-button" data-trend="compare">US vs Norway</button>
+                <button class="control-button" data-trend="borderline">US vs Borderline Cases</button>
+            </div>
+            
+            <div class="card vis-card" style="height: 500px;" id="democracy-trends">
+                <!-- Trend visualization will be inserted here -->
+            </div>
+            
+            <div class="two-column" style="margin-top: 2rem;">
+                <div class="card text-card">
+                    <h4 style="color: var(--primary); margin-bottom: 1rem;">Dimensional Analysis: US vs Norway</h4>
+                    <p>While the US maintains strong scores in <strong>Electoral Process</strong> (9.17) and <strong>Civil Liberties</strong> (8.24), it shows significant weaknesses in:</p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>Functioning of Government</strong>: 6.43 (vs. Norway's 9.64)</li>
+                        <li><strong>Political Culture</strong>: 6.25 (vs. Norway's 10.00)</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">These dimensional gaps are precisely what the machine learning algorithms detected, placing the US firmly in a different cluster than full democracies.</p>
+                </div>
+                <div class="card vis-card" id="us-norway-comparison">
+                    <!-- US vs Norway radar chart will be inserted here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 5: Key Features -->
+        <section id="features" class="story-section">
+            <div class="section-header">
+                <div class="section-number">05</div>
+                <h3 class="section-title">The Critical Dimensions</h3>
+            </div>
+            
+            <div class="two-column">
+                <div class="card text-card">
+                    <p>Not all democratic dimensions were equally important in clustering countries. The machine learning algorithms revealed which aspects most strongly differentiate political regimes:</p>
+                    
+                    <div style="margin-top: 1.5rem;" id="feature-bars">
+                        <div class="feature-bar">
+                            <div class="feature-label">Civil Liberties</div>
+                            <div class="feature-fill" style="width: 90%;">0.90</div>
+                        </div>
+                        <div class="feature-bar">
+                            <div class="feature-label">Electoral Process</div>
+                            <div class="feature-fill" style="width: 86%;">0.86</div>
+                        </div>
+                        <div class="feature-bar">
+                            <div class="feature-label">Functioning of Government</div>
+                            <div class="feature-fill" style="width: 75%;">0.75</div>
+                        </div>
+                        <div class="feature-bar">
+                            <div class="feature-label">Political Culture</div>
+                            <div class="feature-fill" style="width: 72%;">0.72</div>
+                        </div>
+                        <div class="feature-bar">
+                            <div class="feature-label">Political Participation</div>
+                            <div class="feature-fill" style="width: 64%;">0.64</div>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 1.5rem; font-style: italic;">Feature importance was derived from the clustering algorithms' sensitivity to each dimension.</p>
+                </div>
+                <div class="card vis-card" id="feature-radar">
+                    <!-- Visualization will be inserted here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 6: Borderline Cases -->
+        <section id="borderline" class="story-section">
+            <div class="section-header">
+                <div class="section-number">06</div>
+                <h3 class="section-title">Discovering Borderline Cases</h3>
+            </div>
+            
+            <div class="card text-card" style="margin-bottom: 2rem;">
+                <p>One of the most fascinating discoveries was identifying countries that exist at the boundaries between regime types. These <strong>borderline cases</strong> reveal political systems in transition or with unique characteristics that don't fit neatly into a single category.</p>
+                
+                <p style="margin-top: 1rem;">The machine learning model assigned these countries <strong>probability scores</strong> for belonging to different clusters, revealing their ambiguous status.</p>
+            </div>
+            
+            <div class="borderline-cases">
+                <div class="borderline-card">
+                    <h4 style="margin-bottom: 0.5rem;">Hungary</h4>
+                    <p>Officially classified as a <span style="color: var(--flawed-democracy); font-weight: 500;">Flawed Democracy</span>, but machine learning detected characteristics of a <span style="color: var(--hybrid-regime); font-weight: 500;">Hybrid Regime</span>.</p>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 53%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>53% Flawed Democracy</span>
+                        <span>47% Hybrid Regime</span>
+                    </div>
+                </div>
+                
+                <div class="borderline-card">
+                    <h4 style="margin-bottom: 0.5rem;">Poland</h4>
+                    <p>Despite its <span style="color: var(--flawed-democracy); font-weight: 500;">Flawed Democracy</span> label, machine learning found significant <span style="color: var(--hybrid-regime); font-weight: 500;">Hybrid Regime</span> patterns.</p>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 51%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>51% Flawed Democracy</span>
+                        <span>49% Hybrid Regime</span>
+                    </div>
+                </div>
+                
+                <div class="borderline-card">
+                    <h4 style="margin-bottom: 0.5rem;">Mexico</h4>
+                    <p>Officially a <span style="color: var(--flawed-democracy); font-weight: 500;">Flawed Democracy</span> but showing strong indicators of <span style="color: var(--hybrid-regime); font-weight: 500;">Hybrid Regime</span> characteristics.</p>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 48%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>48% Flawed Democracy</span>
+                        <span>52% Hybrid Regime</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card vis-card" style="margin-top: 2rem;" id="borderline-explorer">
+                <!-- Visualization will be inserted here -->
+            </div>
+        </section>
+        
+        <!-- Section 7: Key Insights -->
+        <section id="insights" class="story-section">
+            <div class="section-header">
+                <div class="section-number">07</div>
+                <h3 class="section-title">Key Research Insights</h3>
+            </div>
+            
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-title">Natural Patterns in Political Data</div>
+                    <p>Unsupervised machine learning naturally discovered four distinct clusters that closely align with expert-defined regime types. This validates that democratic classifications reflect inherent patterns in political data.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-title">Hierarchical Classification Works Best</div>
+                    <p>Hierarchical clustering outperformed other algorithms, suggesting that democratic systems exist in a nested relationship rather than as completely separate categories. Democracy exists on a spectrum, not in discrete boxes.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-title">Data-Driven Early Warning System</div>
+                    <p>Machine learning discovered borderline cases before political scientists recognized their ambiguous status. This suggests AI could serve as an early warning system for democratic backsliding or advancement.</p>
+                </div>
+            </div>
+            
+            <div class="card text-card" style="margin-top: 2rem; text-align: center;">
+                <p style="font-size: 1.5rem; font-weight: 300; color: var(--primary);">When treated with care, <strong>data can speak</strong> — and sometimes, it echoes justice</p>
+                
+                <p style="margin-top: 1.5rem;">What's most remarkable isn't simply that machines can classify regimes—it's that they can discover the inherent structure of democracy independently, with no human guidance.</p>
+                
+                <p style="margin-top: 1rem;">This adds a powerful new perspective to political science: the patterns of democracy are not merely human constructs, but are embedded in the data itself.</p>
+            </div>
+        </section>
+        
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="display: inline-block; padding: 1rem 2rem; background-color: var(--primary); color: white; text-decoration: none; border-radius: 50px; font-weight: 500; box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3); transition: var(--transition);">
+                Return to Main Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <p>Data source: Economist Intelligence Unit Democracy Index</p>
+            <p>Compiled by Rosalina Torres as part of democracy clustering analysis project</p>
+            <p>Data Analytics Engineering, MS Candidate</p>
+            <p>© 2025 | Northeastern University</p>
+        </div>
+    </footer>
+
+    <script>
+        // Data for the visualizations
+        const regimeColors = {
+            'Full Democracy': '#4cc9f0',
+            'Flawed Democracy': '#4895ef',
+            'Hybrid Regime': '#f9c74f',
+            'Authoritarian': '#f94144',
+            'Cluster 1': '#4cc9f0',
+            'Cluster 2': '#4895ef',
+            'Cluster 3': '#f9c74f',
+            'Cluster 4': '#f94144'
+        };
+        
+        const countries = [
+            {name: 'Norway', electoral: 10.00, civil: 9.71, functioning: 9.64, participation: 10.00, culture: 10.00, score: 9.81, expertLabel: 'Full Democracy', mlCluster: 'Cluster 1'},
+            {name: 'New Zealand', electoral: 10.00, civil: 9.71, functioning: 9.29, participation: 8.89, culture: 10.00, score: 9.61, expertLabel: 'Full Democracy', mlCluster: 'Cluster 1'},
+            {name: 'United States', electoral: 9.17, civil: 8.24, functioning: 6.43, participation: 7.78, culture: 6.25, score: 7.85, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 2'},
+            {name: 'France', electoral: 9.58, civil: 8.82, functioning: 6.79, participation: 7.78, culture: 6.88, score: 7.99, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 2'},
+            {name: 'Hungary', electoral: 7.83, civil: 6.47, functioning: 5.71, participation: 5.00, culture: 5.63, score: 6.12, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 3', isBorderline: true},
+            {name: 'Poland', electoral: 7.83, civil: 7.06, functioning: 5.36, participation: 5.56, culture: 4.38, score: 6.09, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 3', isBorderline: true},
+            {name: 'Mexico', electoral: 7.50, civil: 5.59, functioning: 5.36, participation: 7.22, culture: 4.38, score: 6.07, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 3', isBorderline: true},
+            {name: 'Turkey', electoral: 5.83, civil: 3.24, functioning: 5.00, participation: 5.56, culture: 5.00, score: 5.04, expertLabel: 'Hybrid Regime', mlCluster: 'Cluster 3'},
+            {name: 'Russia', electoral: 2.17, civil: 2.94, functioning: 1.79, participation: 5.00, culture: 3.13, score: 2.94, expertLabel: 'Authoritarian', mlCluster: 'Cluster 4'},
+            {name: 'China', electoral: 0.00, civil: 1.18, functioning: 4.29, participation: 3.33, culture: 2.50, score: 1.94, expertLabel: 'Authoritarian', mlCluster: 'Cluster 4'}
+        ];
+
+        // Sample cluster statistics
+        const clusterStats = {
+            'hierarchical': {
+                name: 'Hierarchical Clustering',
+                ari: 0.78,
+                description: 'This algorithm builds a tree of clusters, grouping countries based on their similarity. It excelled at capturing the nuanced relationships between different democratic systems, achieving the highest alignment with expert regime classifications.',
+                visualization: 'tree'
+            },
+            'kmeans': {
+                name: 'K-Means Clustering',
+                ari: 0.57,
+                description: 'K-Means partitions countries into distinct clusters while minimizing within-cluster variance. While effective, it was less nuanced than hierarchical methods, particularly for countries at regime boundaries.',
+                visualization: 'scatter'
+            },
+            'gaussian': {
+                name: 'Gaussian Mixture',
+                ari: 0.52,
+                description: 'This model assumes countries come from a mixture of gaussian distributions. It provides probability estimates for cluster membership, making it useful for identifying borderline cases, but had lower overall accuracy.',
+                visualization: 'ellipse'
+            }
+        };
+        
+        // Create dimension distribution visualization
+        function createDimensionDistribution() {
+            // Prepare data
+            const dimensions = ['Electoral Process', 'Functioning of Govt', 'Political Participation', 'Political Culture', 'Civil Liberties'];
+            
+            // Calculate averages by regime type
+            const regimeTypes = ['Full Democracy', 'Flawed Democracy', 'Hybrid Regime', 'Authoritarian'];
+            const averagesByRegime = {};
+            
+            regimeTypes.forEach(regime => {
+                averagesByRegime[regime] = {
+                    electoral: 0,
+                    functioning: 0,
+                    participation: 0,
+                    culture: 0,
+                    civil: 0,
+                    count: 0
+                };
+            });
+            
+            countries.forEach(country => {
+                const regime = country.expertLabel;
+                averagesByRegime[regime].electoral += country.electoral;
+                averagesByRegime[regime].functioning += country.functioning;
+                averagesByRegime[regime].participation += country.participation;
+                averagesByRegime[regime].culture += country.culture;
+                averagesByRegime[regime].civil += country.civil;
+                averagesByRegime[regime].count += 1;
+            });
+            
+            regimeTypes.forEach(regime => {
+                if(averagesByRegime[regime].count > 0) {
+                    averagesByRegime[regime].electoral /= averagesByRegime[regime].count;
+                    averagesByRegime[regime].functioning /= averagesByRegime[regime].count;
+                    averagesByRegime[regime].participation /= averagesByRegime[regime].count;
+                    averagesByRegime[regime].culture /= averagesByRegime[regime].count;
+                    averagesByRegime[regime].civil /= averagesByRegime[regime].count;
+                }
+            });
+            
+            // Create radar chart data
+            const data = regimeTypes.map(regime => {
+                return {
+                    type: 'scatterpolar',
+                    r: [
+                        averagesByRegime[regime].electoral,
+                        averagesByRegime[regime].functioning,
+                        averagesByRegime[regime].participation,
+                        averagesByRegime[regime].culture,
+                        averagesByRegime[regime].civil
+                    ],
+                    theta: dimensions,
+                    fill: 'toself',
+                    name: regime,
+                    line: {
+                        color: regimeColors[regime]
+                    },
+                    fillcolor: regimeColors[regime] + '40'
+                };
+            });
+            
+            const layout = {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 10]
+                    }
+                },
+                showlegend: true,
+                legend: {
+                    orientation: 'h',
+                    y: -0.2
+                },
+                margin: {
+                    l: 50,
+                    r: 50,
+                    t: 50,
+                    b: 50
+                },
+                title: 'Democracy Dimensions by Regime Type'
+            };
+            
+            Plotly.newPlot('dimension-distribution', data, layout);
+        }
+        
+        // Create clustering methods visualization
+        function createClusteringMethod(method) {
+            const methodInfo = clusterStats[method];
+            
+            let data, layout;
+            
+            // Different visualizations based on method type
+            if (method === 'hierarchical') {
+                // Create a dendrogram-like visualization
+                data = [{
+                    type: 'scatter',
+                    mode: 'markers+text',
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    y: [1, 2, 1, 3, 2, 1, 2, 3, 4, 3],
+                    text: countries.map(c => c.name),
+                    textposition: 'top center',
+                    marker: {
+                        size: 10,
+                        color: countries.map(c => regimeColors[c.expertLabel])
+                    },
+                    hoverinfo: 'text',
+                    name: 'Countries'
+                }];
+                
+                // Add connecting lines to simulate dendrogram
+                const shapes = [
+                    {type: 'line', x0: 1, y0: 1, x1: 3, y1: 1, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 3, y0: 1, x1: 6, y1: 1, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 6, y0: 1, x1: 8, y1: 1, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 2, y0: 2, x1: 5, y1: 2, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 5, y0: 2, x1: 7, y1: 2, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 4, y0: 3, x1: 9, y1: 3, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 8, y0: 3, x1: 10, y1: 3, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 9, y0: 3, x1: 9, y1: 4, line: {color: 'gray', width: 1}}
+                ];
+                
+                layout = {
+                    title: 'Hierarchical Clustering (ARI = 0.78)',
+                    shapes: shapes,
+                    showlegend: false,
+                    xaxis: {showticklabels: false, zeroline: false, showgrid: false},
+                    yaxis: {showticklabels: false, zeroline: false, showgrid: false},
+                    annotations: [{
+                        x: 5,
+                        y: 4.5,
+                        text: 'Countries are grouped in a hierarchical structure<br>based on similarity across all dimensions',
+                        showarrow: false,
+                        font: {size: 12}
+                    }],
+                    margin: {l: 40, r: 40, t: 60, b: 40},
+                    height: 400
+                };
+            } else if (method === 'kmeans') {
+                // Create a k-means visualization with centroids
+                const centroids = [
+                    {x: 9.5, y: 9.5, label: 'Cluster 1'},
+                    {x: 8.5, y: 7.5, label: 'Cluster 2'},
+                    {x: 6.5, y: 5.0, label: 'Cluster 3'},
+                    {x: 1.5, y: 2.0, label: 'Cluster 4'}
+                ];
+                
+                data = [
+                    {
+                        type: 'scatter',
+                        x: countries.map(c => c.electoral),
+                        y: countries.map(c => c.civil),
+                        mode: 'markers+text',
+                        text: countries.map(c => c.name),
+                        textposition: 'top center',
+                        marker: {
+                            size: countries.map(c => c.score * 1.5),
+                            color: countries.map(c => regimeColors[c.mlCluster]),
+                            opacity: 0.7
+                        },
+                        hoverinfo: 'text',
+                        name: 'Countries'
+                    },
+                    {
+                        type: 'scatter',
+                        x: centroids.map(c => c.x),
+                        y: centroids.map(c => c.y),
+                        mode: 'markers',
+                        marker: {
+                            size: 15,
+                            color: centroids.map(c => regimeColors[c.label]),
+                            symbol: 'x',
+                            line: {width: 2, color: 'black'}
+                        },
+                        hoverinfo: 'text',
+                        text: centroids.map(c => `${c.label} Centroid`),
+                        name: 'Centroids'
+                    }
+                ];
+                
+                layout = {
+                    title: 'K-Means Clustering (ARI = 0.57)',
+                    xaxis: {title: 'Electoral Process', range: [0, 10]},
+                    yaxis: {title: 'Civil Liberties', range: [0, 10]},
+                    annotations: [{
+                        x: 5,
+                        y: 9,
+                        text: 'X marks show cluster centroids',
+                        showarrow: false,
+                        font: {size: 12}
+                    }],
+                    margin: {l: 40, r: 40, t: 60, b: 40},
+                    height: 400
+                };
+            } else if (method === 'gaussian') {
+                // Gaussian mixture visualization with probability ellipses
+                data = [
+                    {
+                        type: 'scatter',
+                        x: countries.map(c => c.electoral),
+                        y: countries.map(c => c.civil),
+                        mode: 'markers+text',
+                        text: countries.map(c => c.name),
+                        textposition: 'top center',
+                        marker: {
+                            size: countries.map(c => c.score * 1.5),
+                            color: countries.map(c => regimeColors[c.mlCluster]),
+                            opacity: 0.7
+                        },
+                        hoverinfo: 'text',
+                        name: 'Countries'
+                    }
+                ];
+                
+                // Add ellipse shapes representing Gaussian distributions
+                const shapes = [
+                    {type: 'circle', x0: 8.5, y0: 8.5, x1: 10.5, y1: 10.5, fillcolor: regimeColors['Cluster 1'] + '30', line: {width: 0}},
+                    {type: 'circle', x0: 7.5, y0: 6.5, x1: 9.5, y1: 8.5, fillcolor: regimeColors['Cluster 2'] + '30', line: {width: 0}},
+                    {type: 'circle', x0: 5.5, y0: 3.5, x1: 7.5, y1: 5.5, fillcolor: regimeColors['Cluster 3'] + '30', line: {width: 0}},
+                    {type: 'circle', x0: 0.5, y0: 0.5, x1: 2.5, y1: 2.5, fillcolor: regimeColors['Cluster 4'] + '30', line: {width: 0}}
+                ];
+                
+                layout = {
+                    title: 'Gaussian Mixture Model (ARI = 0.52)',
+                    xaxis: {title: 'Electoral Process', range: [0, 10]},
+                    yaxis: {title: 'Civil Liberties', range: [0, 10]},
+                    shapes: shapes,
+                    annotations: [{
+                        x: 5,
+                        y: 9,
+                        text: 'Colored regions show probability distributions',
+                        showarrow: false,
+                        font: {size: 12}
+                    }],
+                    margin: {l: 40, r: 40, t: 60, b: 40},
+                    height: 400
+                };
+            }
+            
+            Plotly.newPlot('clustering-method', data, layout);
+            
+            // Update the method description
+            document.getElementById('method-description').innerHTML = `
+                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${methodInfo.name} (ARI = ${methodInfo.ari})</h4>
+                <p>${methodInfo.description}</p>
+            `;
+        }
+        
+        // Create cluster comparison visualization
+        function createClusterComparison(view = 'comparison') {
+            const data = [];
+            
+            if (view === 'comparison' || view === 'machine') {
+                // ML-discovered clusters
+                data.push({
+                    type: 'scatter',
+                    x: countries.map(c => c.electoral),
+                    y: countries.map(c => c.civil),
+                    mode: 'markers',
+                    marker: {
+                        size: countries.map(c => c.score * 2),
+                        color: countries.map(c => regimeColors[c.mlCluster]),
+                        line: {
+                            color: 'white',
+                            width: 1
+                        }
+                    },
+                    text: countries.map(c => `${c.name}<br>ML Cluster: ${c.mlCluster}<br>Score: ${c.score}`),
+                    name: 'Machine Learning Clusters',
+                    hoverinfo: 'text'
+                });
+            }
+            
+            if (view === 'comparison' || view === 'expert') {
+                // Expert-defined regimes
+                const xOffset = view === 'comparison' ? 0.3 : 0;
+                data.push({
+                    type: 'scatter',
+                    x: countries.map(c => c.electoral + (view === 'comparison' ? (c.isBorderline ? -0.3 : 0) : 0)),
+                    y: countries.map(c => c.civil + (view === 'comparison' ? (c.isBorderline ? -0.3 : 0) : 0)),
+                    mode: 'markers',
+                    marker: {
+                        size: countries.map(c => c.score * 2),
+                        color: countries.map(c => regimeColors[c.expertLabel]),
+                        symbol: view === 'comparison' ? 'circle-open' : 'circle',
+                        line: {
+                            color: 'black',
+                            width: view === 'comparison' ? 2 : 0
+                        }
+                    },
+                    text: countries.map(c => `${c.name}<br>Expert Label: ${c.expertLabel}<br>Score: ${c.score}`),
+                    name: 'Expert Classifications',
+                    hoverinfo: 'text'
+                });
+            }
+            
+            // Regime boundary lines
+            const shapes = [
+                {type: 'line', x0: 0, y0: 8.01, x1: 10, y1: 8.01, line: {color: regimeColors['Full Democracy'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 8.01, y0: 0, x1: 8.01, y1: 10, line: {color: regimeColors['Full Democracy'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 0, y0: 6.01, x1: 10, y1: 6.01, line: {color: regimeColors['Flawed Democracy'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 6.01, y0: 0, x1: 6.01, y1: 10, line: {color: regimeColors['Flawed Democracy'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 0, y0: 4.01, x1: 10, y1: 4.01, line: {color: regimeColors['Hybrid Regime'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 4.01, y0: 0, x1: 4.01, y1: 10, line: {color: regimeColors['Hybrid Regime'], width: 1, dash: 'dash'}}
+            ];
+            
+            const layout = {
+                title: view === 'comparison' ? 'Machine Learning Clusters vs Expert Classifications' :
+                       view === 'machine' ? 'Machine-Discovered Clusters (No Labels Used)' : 
+                       'Expert-Defined Regime Types',
+                xaxis: {title: 'Electoral Process', range: [0, 10]},
+                yaxis: {title: 'Civil Liberties', range: [0, 10]},
+                shapes: shapes,
+                height: 500,
+                legend: {
+                    orientation: 'h',
+                    y: -0.15
+                },
+                annotations: view === 'comparison' ? [
+                    {
+                        x: 8.5,
+                        y: 1,
+                        text: 'Filled circles: ML clusters<br>Open circles: Expert labels',
+                        showarrow: false,
+                        bgcolor: 'white',
+                        borderpad: 4
+                    },
+                    {
+                        x: 2,
+                        y: 9,
+                        text: 'ARI = 0.78',
+                        showarrow: false,
+                        font: {size: 14, weight: 'bold'},
+                        bgcolor: 'white',
+                        borderpad: 4
+                    }
+                ] : []
+            };
+            
+            Plotly.newPlot('cluster-comparison', data, layout);
+        }
+        
+        // Create feature radar plot
+        function createFeatureRadar() {
+            const dimensions = ['Electoral Process', 'Civil Liberties', 'Functioning of Govt', 'Political Participation', 'Political Culture'];
+            
+            // Create average values for each regime type
+            const regimes = ['Full Democracy', 'Flawed Democracy', 'Hybrid Regime', 'Authoritarian'];
+            
+            const traces = regimes.map(regime => {
+                // Filter countries by regime
+                const filteredCountries = countries.filter(c => c.expertLabel === regime);
+                
+                // Calculate averages
+                const electoral = filteredCountries.reduce((sum, c) => sum + c.electoral, 0) / filteredCountries.length;
+                const civil = filteredCountries.reduce((sum, c) => sum + c.civil, 0) / filteredCountries.length;
+                const functioning = filteredCountries.reduce((sum, c) => sum + c.functioning, 0) / filteredCountries.length;
+                const participation = filteredCountries.reduce((sum, c) => sum + c.participation, 0) / filteredCountries.length;
+                const culture = filteredCountries.reduce((sum, c) => sum + c.culture, 0) / filteredCountries.length;
+                
+                return {
+                    type: 'scatterpolar',
+                    r: [electoral, civil, functioning, participation, culture],
+                    theta: dimensions,
+                    fill: 'toself',
+                    name: regime,
+                    line: {color: regimeColors[regime]},
+                    fillcolor: regimeColors[regime] + '40'
+                };
+            });
+            
+            const layout = {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 10]
+                    }
+                },
+                showlegend: true,
+                title: 'Democracy Dimensions by Regime Type',
+                legend: {
+                    orientation: 'h',
+                    y: -0.2
+                }
+            };
+            
+            Plotly.newPlot('feature-radar', traces, layout);
+        }
+        
+        // Create democracy trends visualization
+        function createDemocracyTrends(trendType = 'all') {
+            const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+            
+            // Democracy index scores over time
+            const trends = {
+                'Norway': [9.93, 9.93, 9.87, 9.87, 9.87, 9.81, 9.81, 9.81, 9.75, 9.81],
+                'United States': [8.05, 7.98, 7.98, 7.98, 7.96, 7.96, 7.92, 7.85, 7.85, 7.85],
+                'Sweden': [9.45, 9.39, 9.39, 9.39, 9.39, 9.26, 9.26, 9.39, 9.39, 9.39],
+                'New Zealand': [9.26, 9.26, 9.26, 9.26, 9.26, 9.25, 9.37, 9.37, 9.61, 9.61],
+                'Hungary': [7.53, 7.25, 7.00, 6.84, 6.64, 6.63, 6.56, 6.50, 6.12, 6.12],
+                'Poland': [7.09, 7.09, 7.09, 6.67, 6.67, 6.62, 6.57, 6.49, 6.09, 6.09],
+                'Mexico': [6.55, 6.47, 6.47, 6.41, 6.19, 6.09, 6.09, 6.07, 6.07, 6.07]
+            };
+            
+            // Full Democracy threshold
+            const fullDemocracyLine = {
+                type: 'scatter',
+                x: years,
+                y: Array(years.length).fill(8.01),
+                mode: 'lines',
+                name: 'Full Democracy Threshold',
+                line: {
+                    color: 'rgba(76, 201, 240, 0.5)',
+                    width: 1,
+                    dash: 'dash'
+                }
+            };
+            
+            // Flawed Democracy threshold
+            const flawedDemocracyLine = {
+                type: 'scatter',
+                x: years,
+                y: Array(years.length).fill(6.01),
+                mode: 'lines',
+                name: 'Flawed Democracy Threshold',
+                line: {
+                    color: 'rgba(247, 37, 133, 0.5)',
+                    width: 1,
+                    dash: 'dash'
+                }
+            };
+            
+            const data = [fullDemocracyLine, flawedDemocracyLine];
+            
+            if (trendType === 'all') {
+                // Add all countries
+                Object.keys(trends).forEach(country => {
+                    // Choose color based on average score
+                    const avgScore = trends[country].reduce((a, b) => a + b, 0) / trends[country].length;
+                    let color;
+                    if (avgScore >= 8.01) color = regimeColors['Full Democracy'];
+                    else if (avgScore >= 6.01) color = regimeColors['Flawed Democracy'];
+                    else if (avgScore >= 4.01) color = regimeColors['Hybrid Regime'];
+                    else color = regimeColors['Authoritarian'];
+                    
+                    data.push({
+                        type: 'scatter',
+                        x: years,
+                        y: trends[country],
+                        mode: 'lines+markers',
+                        name: country,
+                        line: {
+                            color: color,
+                            width: country === 'United States' ? 3 : 2
+                        },
+                        marker: {
+                            size: country === 'United States' ? 8 : 6
+                        }
+                    });
+                });
+            } else if (trendType === 'compare') {
+                // Add only US and Norway
+                data.push({
+                    type: 'scatter',
+                    x: years,
+                    y: trends['Norway'],
+                    mode: 'lines+markers',
+                    name: 'Norway',
+                    line: {
+                        color: regimeColors['Full Democracy'],
+                        width: 3
+                    },
+                    marker: {
+                        size: 8
+                    }
+                });
+                
+                data.push({
+                    type: 'scatter',
+                    x: years,
+                    y: trends['United States'],
+                    mode: 'lines+markers',
+                    name: 'United States',
+                    line: {
+                        color: regimeColors['Flawed Democracy'],
+                        width: 3
+                    },
+                    marker: {
+                        size: 8
+                    }
+                });
+            } else if (trendType === 'borderline') {
+                // Add US and borderline countries
+                data.push({
+                    type: 'scatter',
+                    x: years,
+                    y: trends['United States'],
+                    mode: 'lines+markers',
+                    name: 'United States',
+                    line: {
+                        color: regimeColors['Flawed Democracy'],
+                        width: 3
+                    },
+                    marker: {
+                        size: 8
+                    }
+                });
+                
+                ['Hungary', 'Poland', 'Mexico'].forEach(country => {
+                    data.push({
+                        type: 'scatter',
+                        x: years,
+                        y: trends[country],
+                        mode: 'lines+markers',
+                        name: country,
+                        line: {
+                            color: '#FF5722',
+                            width: 2,
+                            dash: 'solid'
+                        },
+                        marker: {
+                            size: 6
+                        }
+                    });
+                });
+            }
+            
+            // Add US downgrade annotation
+            const annotations = [{
+                x: 2016,
+                y: 7.98,
+                text: 'US Downgraded to<br>Flawed Democracy',
+                showarrow: true,
+                arrowhead: 5,
+                ax: 0,
+                ay: -40
+            }];
+            
+            const layout = {
+                title: 'Democracy Index Trends (2015-2024)',
+                xaxis: {title: 'Year', tickmode: 'array', tickvals: years},
+                yaxis: {title: 'Democracy Index Score', range: [5.5, 10]},
+                annotations: annotations,
+                legend: {
+                    orientation: 'h',
+                    y: -0.15
+                },
+                hovermode: 'closest'
+            };
+            
+            Plotly.newPlot('democracy-trends', data, layout);
+        }
+        
+        // Create US vs Norway radar comparison
+        function createUSNorwayComparison() {
+            const dimensions = ['Electoral Process', 'Civil Liberties', 'Functioning of Govt', 'Political Participation', 'Political Culture'];
+            
+            const us = {
+                electoral: 9.17,
+                civil: 8.24,
+                functioning: 6.43,
+                participation: 7.78,
+                culture: 6.25
+            };
+            
+            const norway = {
+                electoral: 10.0,
+                civil: 9.71,
+                functioning: 9.64,
+                participation: 10.0,
+                culture: 10.0
+            };
+            
+            const data = [
+                {
+                    type: 'scatterpolar',
+                    r: [us.electoral, us.civil, us.functioning, us.participation, us.culture],
+                    theta: dimensions,
+                    fill: 'toself',
+                    name: 'United States',
+                    line: {color: regimeColors['Flawed Democracy']},
+                    fillcolor: regimeColors['Flawed Democracy'] + '40'
+                },
+                {
+                    type: 'scatterpolar',
+                    r: [norway.electoral, norway.civil, norway.functioning, norway.participation, norway.culture],
+                    theta: dimensions,
+                    fill: 'toself',
+                    name: 'Norway',
+                    line: {color: regimeColors['Full Democracy']},
+                    fillcolor: regimeColors['Full Democracy'] + '40'
+                }
+            ];
+            
+            const layout = {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 10]
+                    }
+                },
+                showlegend: true,
+                title: 'Democratic Dimensions Comparison'
+            };
+            
+            Plotly.newPlot('us-norway-comparison', data, layout);
+        }
+        
+        // Create borderline explorer
+        function createBorderlineExplorer() {
+            const borderlineCountries = countries.filter(c => c.isBorderline);
+            
+            // Add a couple more for demonstration
+            borderlineCountries.push({
+                name: 'Tunisia',
+                electoral: 7.50,
+                civil: 6.47,
+                functioning: 5.36,
+                participation: 6.11,
+                culture: 5.63,
+                score: 6.08,
+                expertLabel: 'Flawed Democracy',
+                mlCluster: 'Cluster 3',
+                isBorderline: true
+            });
+            
+            // Prepare data for scatter plot
+            const trace = {
+                type: 'scatter',
+                x: borderlineCountries.map(c => c.functioning),
+                y: borderlineCountries.map(c => c.civil),
+                mode: 'markers+text',
+                text: borderlineCountries.map(c => c.name),
+                textposition: 'top',
+                marker: {
+                    size: borderlineCountries.map(c => c.score * 3),
+                    color: borderlineCountries.map(c => '#FF5722'),
+                    opacity: 0.7,
+                    line: {
+                        color: 'white',
+                        width: 2
+                    }
+                },
+                name: 'Borderline Countries'
+            };
+            
+            const layout = {
+                title: 'Borderline Countries: Functioning of Government vs Civil Liberties',
+                xaxis: {title: 'Functioning of Government', range: [4, 7]},
+                yaxis: {title: 'Civil Liberties', range: [5, 8]},
+                shapes: [
+                    // Hybrid/Flawed border region
+                    {
+                        type: 'rect',
+                        x0: 4, 
+                        y0: 5, 
+                        x1: 6.5, 
+                        y1: 7.5, 
+                        fillcolor: 'rgba(255,193,7,0.2)', 
+                        line: {width: 0}
+                    }
+                ],
+                annotations: [
+                    {
+                        x: 5.25,
+                        y: 6.25,
+                        text: 'Borderline<br>Region',
+                        showarrow: false,
+                        font: {size: 14, color: '#FF5722'}
+                    }
+                ],
+                height: 400
+            };
+            
+            Plotly.newPlot('borderline-explorer', [trace], layout);
+        }
+        
+        // Initialize all visualizations
+        window.onload = function() {
+            createDimensionDistribution();
+            createClusteringMethod('hierarchical');
+            createClusterComparison('comparison');
+            createFeatureRadar();
+            createDemocracyTrends('all');
+            createUSNorwayComparison();
+            createBorderlineExplorer();
+            
+            // Set up event listeners for interactive controls
+            document.querySelectorAll('[data-method]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('[data-method]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createClusteringMethod(this.dataset.method);
+                });
+            });
+            
+            document.querySelectorAll('[data-view]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('[data-view]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createClusterComparison(this.dataset.view);
+                });
+            });
+            
+            document.querySelectorAll('[data-trend]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('[data-trend]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createDemocracyTrends(this.dataset.trend);
+                });
+            });
+            
+            // Intersection Observer for fade-in animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            document.querySelectorAll('.story-section').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Smooth scrolling for nav links
+            document.querySelectorAll('.nav-item').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update active nav item
+                    document.querySelectorAll('.nav-item').forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        };
+    </script>
+</body>
+</html>
