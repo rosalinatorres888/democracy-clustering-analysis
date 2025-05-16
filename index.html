@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosalina Torres | Data Analytics Engineer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables */
+        :root {
+            --primary: #26c3a6;
+            --primary-dark: #1e9a86;
+            --secondary: #BA68C8;
+            --dark: #333333;
+            --light: #f8f9fa;
+            --accent1: #FF5733;
+            --accent2: #4285F4;
+            --text: #333333;
+            --background: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 70px;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        section {
+            padding: 80px 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 40px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background-color: var(--primary);
+            bottom: -10px;
+            left: 0;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-dark);
+        }
+
+        button, .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        button:hover, .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        /* Header */
+        header {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: 10px 0;
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo span {
+            color: var(--dark);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: var(--dark);
+            font-weight: 500;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            bottom: -5px;
+            left: 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        /* Hero Section */
+        #hero {
+            background: linear-gradient(135deg, rgba(38, 195, 166, 0.1) 0%, rgba(255, 255, 255, 0.9) 100%);
+            position: relative;
+            overflow: hidden;
+            padding-top: 120px;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 300px;
+            margin-right: 50px;
+        }
+
+        .hero-text h1 {
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .hero-text p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+        }
+
+        .hero-image {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image img {
+            max-width: 400px;
+            border-radius: 50%;
+            box-shadow: var(--shadow);
+            border: 5px solid white;
+        }
+
+        .social-links {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            margin-right: 15px;
+            transition: var(--transition);
+        }
+
+        .social-links a:nth-child(1) {
+            background-color: #0A66C2; /* LinkedIn */
+        }
+
+        .social-links a:nth-child(2) {
+            background-color: #333; /* GitHub */
+        }
+
+        .social-links a:nth-child(3) {
+            background-color: #DB4437; /* Email */
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .tech-badge {
+            background-color: white;
+            border-radius: 5px;
+            padding: 8px 12px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--dark);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+        }
+
+        .tech-badge i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+
+        /* About Section */
+        #about {
+            background-color: var(--light);
+        }
+
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            margin-right: 50px;
+        }
+
+        .about-image img {
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .about-text {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .about-text h2 {
+            color: var(--dark);
+        }
+
+        .skill-bars {
+            margin-top: 30px;
+        }
+
+        .skill-bar {
+            margin-bottom: 20px;
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .skill-progress {
+            height: 10px;
+            width: 100%;
+            background-color: #e1e1e1;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .skill-progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            transition: width 1s ease;
+        }
+
+        .skill-progress-bar.python {
+            width: 0;
+            background-color: #3776AB;
+        }
+
+        .skill-progress-bar.ml {
+            width: 0;
+            background-color: var(--secondary);
+        }
+
+        .skill-progress-bar.data {
+            width: 0;
+            background-color: var(--accent1);
+        }
+
+        .skill-progress-bar.viz {
+            width: 0;
+            background-color: var(--accent2);
+        }
+
+        /* Projects Section */
+        #projects {
+            background-color: white;
+        }
+
+        .section-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 50px;
+        }
+
+        .section-intro h2 {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .section-intro h2::after {
+            left: 25%;
+            width: 50%;
+        }
+
+        .project-filters {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .project-filter {
+            background-color: white;
+            color: var(--dark);
+            border: 1px solid #e1e1e1;
+            padding: 8px 20px;
+            margin: 0 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .project-filter.active, .project-filter:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .project-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            height: 450px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-image {
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+            flex: 0;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            flex: 0;
+        }
+
+        .project-tag {
+            background-color: #f1f1f1;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+
+        .project-description {
+            color: #666;
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .project-links {
+            display: flex;
+            margin-top: auto;
+        }
+
+        .project-links a {
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .project-links a i {
+            margin-right: 5px;
+        }
+
+        .project-links a.demo {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .project-links a.github {
+            background-color: var(--dark);
+            color: white;
+        }
+
+        /* Resume Section */
+        #resume {
+            background-color: var(--light);
+        }
+
+        .resume-download {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .resume-download .btn {
+            display: inline-flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .resume-download .btn i {
+            margin-right: 10px;
+        }
+
+        .timeline-content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .timeline-column {
+            flex: 1;
+            min-width: 300px;
+            padding: 0 20px;
+        }
+
+        .timeline-column h3 {
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .timeline-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            background-color: var(--primary);
+            bottom: -8px;
+            left: 0;
+        }
+
+        .timeline-item {
+            border-left: 2px solid var(--primary);
+            padding: 0 0 30px 20px;
+            position: relative;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            left: -7px;
+            top: 5px;
+        }
+
+        .timeline-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .timeline-item-title {
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+
+        .timeline-item-subtitle {
+            color: var(--primary);
+            font-style: italic;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item-date {
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .timeline-item-description {
+            color: #666;
+        }
+
+        /* Contact Section */
+        #contact {
+            background-color: white;
+        }
+
+        .contact-content {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+            margin-right: 50px;
+        }
+
+        .contact-form {
+            flex: 2;
+            min-width: 300px;
+        }
+
+        .contact-info h2 {
+            color: var(--dark);
+        }
+
+        .contact-info p {
+            margin-bottom: 30px;
+        }
+
+        .contact-method {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .contact-method i {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .contact-method-details h4 {
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .contact-method-details p {
+            margin-bottom: 0;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e1e1e1;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(38, 195, 166, 0.2);
+        }
+
+        textarea.form-control {
+            height: 150px;
+            resize: none;
+        }
+
+        .form-submit {
+            text-align: right;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .footer-content p {
+            margin-bottom: 0;
+        }
+
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 99;
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            h1 {
+                font-size: 2.4rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            section {
+                padding: 60px 0;
+            }
+
+            .hero-text {
+                margin-right: 0;
+                margin-bottom: 40px;
+            }
+
+            .hero-image img {
+                max-width: 300px;
+            }
+
+            .about-image {
+                margin-right: 0;
+                margin-bottom: 40px;
+            }
+
+            .contact-info {
+                margin-right: 0;
+                margin-bottom: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                right: 0;
+                background-color: white;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 0;
+                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: var(--transition);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .nav-links li {
+                margin: 10px 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .hero-content, .about-content, .contact-content {
+                flex-direction: column;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate {
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+
+        .animate-delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .animate-delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .animate-delay-3 {
+            animation-delay: 0.6s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header">
+        <div class="container">
+            <nav>
+                <div class="logo">Rosalina<span>Torres</span></div>
+                <ul class="nav-links">
+                    <li><a href="#hero" class="active">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#resume">Resume</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text animate">
+                    <h1>Data Analytics Engineer</h1>
+                    <p>Transforming complex data into actionable insights through machine learning and analytics. Graduate student at Northeastern University with 13+ years of enterprise technology experience.</p>
+                    <a href="#projects" class="btn">View My Work</a>
+                    <div class="social-links">
+                        <a href="https://linkedin.com/in/rosalina2" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://github.com/rosalinatorres888" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="mailto:rosalina7torres@gmail.com"><i class="fas fa-envelope"></i></a>
+                    </div>
+                    <div class="tech-stack">
+                        <div class="tech-badge"><i class="fab fa-python"></i> Python</div>
+                        <div class="tech-badge"><i class="fas fa-brain"></i> Machine Learning</div>
+                        <div class="tech-badge"><i class="fas fa-project-diagram"></i> Network Analysis</div>
+                        <div class="tech-badge"><i class="fas fa-chart-bar"></i> Data Visualization</div>
+                    </div>
+                </div>
+                <div class="hero-image animate animate-delay-1">
+                    <img src="https://api.placeholder.com/400/320" alt="Rosalina Torres">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-image animate">
+                    <img src="https://api.placeholder.com/400/320" alt="About Rosalina">
+                </div>
+                <div class="about-text animate animate-delay-1">
+                    <h2>About Me</h2>
+                    <p>I'm a Data Analytics Engineering graduate student at Northeastern University with a background in enterprise technology partnerships and sales. My experience spans AI data training, network analysis, and machine learning applications.</p>
+                    <p>With over 13 years in the technology industry, I've developed a passion for transforming complex datasets into meaningful insights that drive business decisions. I specialize in creating machine learning models, network visualizations, and analytical pipelines that reveal patterns in seemingly unrelated data.</p>
+                    <div class="skill-bars">
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Python & ML Libraries</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar python" data-width="90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Machine Learning & AI</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar ml" data-width="85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Data Analysis & Processing</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar data" data-width="95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-info">
+                                <span>Data Visualization</span>
+                                <span>88%</span>
+                            </div>
+                            <div class="skill-progress">
+                                <div class="skill-progress-bar viz" data-width="88%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects">
+        <div class="container">
+            <div class="section-intro animate">
+                <h2>My Projects</h2>
+                <p>Explore my portfolio of data science and machine learning projects. Each project demonstrates my technical skills and approach to solving complex problems through data.</p>
+            </div>
+            <div class="project-filters animate animate-delay-1">
+                <button class="project-filter active" data-filter="all">All</button>
+                <button class="project-filter" data-filter="ml">Machine Learning</button>
+                <button class="project-filter" data-filter="network">Network Analysis</button>
+                <button class="project-filter" data-filter="viz">Data Visualization</button>
+            </div>
+            <div class="projects-grid animate animate-delay-2">
+                <!-- Project 1 -->
+                <div class="project-card" data-category="ml">
+                    <div class="project-image">
+                        <img src="https://api.placeholder.com/400/320" alt="Clustering Democracy">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Clustering Democracy</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Machine Learning</span>
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Hierarchical Clustering</span>
+                        </div>
+                        <p class="project-description">Unsupervised ML algorithms to analyze global governance patterns across democratic systems. Identified distinct democracy profiles and at-risk nations using clustering techniques.</p>
+                        <div class="project-links">
+                            <a href="#" class="demo"><i class="fas fa-external-link-alt"></i> View Demo</a>
+                            <a href="https://github.com/rosalinatorres888/democracy-clustering-analysis" class="github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Project 2 -->
+                <div class="project-card" data-category="network">
+                    <div class="project-image">
+                        <img src="https://api.placeholder.com/400/320" alt="Network Word Frequency Analysis">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Network Word Frequency Analysis</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Network Analysis</span>
+                            <span class="project-tag">NLP</span>
+                            <span class="project-tag">NetworkX</span>
+                        </div>
+                        <p class="project-description">Applying network science to uncover semantic relationships within academic literature. Created knowledge graphs representing latent thematic structures.</p>
+                        <div class="project-links">
+                            <a href="#" class="demo"><i class="fas fa-external-link-alt"></i> View Demo</a>
+                            <a href="https://github.com/rosalinatorres888/Network-Word-Frequency-Analysis-for-Data-Mining" class="github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Project 3 -->
+                <div class="project-card" data-category="ml viz">
+                    <div class="project-image">
+                        <img src="https://api.placeholder.com/400/320" alt="Human Activity Entropy">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Human Activity Entropy</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Time Series</span>
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Data Visualization</span>
+                        </div>
+                        <p class="project-description">Analysis of human activity patterns using entropy and information theory principles. Visualized complexity in daily routines using wearable sensor data.</p>
+                        <div class="project-links">
+                            <a href="#" class="demo"><i class="fas fa-external-link-alt"></i> View Demo</a>
+                            <a href="https://github.com/rosalinatorres888/human-activity-entropy" class="github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resume Section -->
+    <section id="resume">
+        <div class="container">
+            <div class="section-intro animate">
+                <h2>Resume & Experience</h2>
+                <p>My professional journey encompasses both technical expertise in data analytics and business experience in enterprise technology partnerships.</p>
+            </div>
+            <div class="resume-download animate animate-delay-1">
+                <a href="#" class="btn"><i class="fas fa-download"></i> Download Full Resume</a>
+            </div>
+            <div class="timeline-content animate animate-delay-2">
+                <div class="timeline-column">
+                    <h3>Education</h3>
+                    <div class="timeline-item">
+                        <div class="timeline-item-header">
+                            <div>
+                                <div class="timeline-item-title">MS in Data Analytics Engineering</div>
+                                <div class="timeline-item-subtitle">Northeastern University</div>
+                            </div>
+                            <div class="timeline-item-date">2024-2026</div>
+                        </div>
+                        <div class="timeline-item-description">
+                            Coursework in foundations of data analytics engineering, computation and visualization for analytics.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-header">
+                            <div>
+                                <div class="timeline-item-title">BS in Economics & Spanish Literature</div>
+                                <div class="timeline-item-subtitle">Bridgewater State University</div>
+                            </div>
+                            <div class="timeline-item-date">Completed</div>
+                        </div>
+                        <div class="timeline-item-description">
+                            Double major combining quantitative economic analysis with language and literature studies.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-header">
+                            <div>
+                                <div class="timeline-item-title">Professional Certifications</div>
+                                <div class="timeline-item-subtitle">Industry Credentials</div>
+                            </div>
+                            <div class="timeline-item-date">Various</div>
+                        </div>
+                        <div class="timeline-item-description">
+                            AWS Cloud Practitioner, Google Data Analytics, Google Cloud Generative AI Specialization, ChatGPT Advanced Analytics.
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-column">
+                    <h3>Work Experience</h3>
+                    <div class="timeline-item">
+                        <div class="timeline-item-header">
+                            <div>
+                                <div class="timeline-item-title">Spanish AI Data Trainer</div>
+                                <div class="timeline-item-subtitle">Alignerr</div>
+                            </div>
+                            <div class="timeline-item-date">2023-Present</div>
+                        </div>
+                        <div class="timeline-item-description">
+                            Annotate and refine AI datasets to improve model performance for NLP applications. Evaluate AI-generated code and optimize machine learning algorithms.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-header">
+                            <div>
+                                <div class="timeline-item-title">Regional Manager - Partnerships</div>
+                                <div class="timeline-item-subtitle">Collibra</div>
+                            </div>
+                            <div class="timeline-item-date">2021-2023</div>
+                        </div>
+                        <div class="timeline-item-description">
+                            Generated $2.4M in new business ARR by pursuing partner opportunities. Conducted root cause analysis to identify process bottlenecks in partner operations.
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-item-header">
+                            <div>
+                                <div class="timeline-item-title">Regional Manager - Channel</div>
+                                <div class="timeline-item-subtitle">Zerto</div>
+                            </div>
+                            <div class="timeline-item-date">2017-2021</div>
+                        </div>
+                        <div class="timeline-item-description">
+                            Achieved Global Sales of the Year and President's Club honors. Attained 122% quota in FY19Q1 and 257% in FY19Q4.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-intro animate">
+                <h2>Get In Touch</h2>
+                <p>Interested in collaborating or learning more about my work? Feel free to reach out using any of the methods below.</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info animate animate-delay-1">
+                    <div class="contact-method">
+                        <i class="fas fa-envelope"></i>
+                        <div class="contact-method-details">
+                            <h4>Email</h4>
+                            <p>rosalina7torres@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <i class="fas fa-phone"></i>
+                        <div class="contact-method-details">
+                            <h4>Phone</h4>
+                            <p>+1 774.339.2255</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div class="contact-method-details">
+                            <h4>Location</h4>
+                            <p>Boston, MA</p>
+                        </div>
+                    </div>
+                    <div class="contact-method">
+                        <i class="fab fa-linkedin-in"></i>
+                        <div class="contact-method-details">
+                            <h4>LinkedIn</h4>
+                            <p>linkedin.com/in/rosalina2</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form animate animate-delay-2">
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" class="form-control" required></textarea>
+                        </div>
+                        <div class="form-submit">
+                            <button type="submit" class="btn">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Rosalina Torres. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Mobile Navigation Toggle
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navLinks = document.querySelector('.nav-links');
+
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // Active Navigation Link on Scroll
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('.nav-links a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href').substring(1) === current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Header background on scroll
+        const header = document.querySelector('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Back to Top Button
+        const backToTop = document.querySelector('.back-to-top');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Animate skill bars on scroll
+        const skillBars = document.querySelectorAll('.skill-progress-bar');
+        const animateSkillBars = () => {
+            skillBars.forEach(bar => {
+                const width = bar.getAttribute('data-width');
+                bar.style.width = width;
+            });
+        };
+
+        // Intersection Observer for skill bars
+        const skillSection = document.querySelector('#about');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateSkillBars();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(skillSection);
+
+        // Project Filtering
+        const projectFilters = document.querySelectorAll('.project-filter');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        projectFilters.forEach(filter => {
+            filter.addEventListener('click', () => {
+                // Remove active class from all filters
+                projectFilters.forEach(f => f.classList.remove('active'));
+                // Add active class to current filter
+                filter.classList.add('active');
+                
+                const filterValue = filter.getAttribute('data-filter');
+                
+                // Show/hide projects based on filter
+                projectCards.forEach(card => {
+                    if (filterValue === 'all') {
+                        card.style.display = 'block';
+                    } else {
+                        const categories = card.getAttribute('data-category').split(' ');
+                        if (categories.includes(filterValue)) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+
+        // Form submission handler
+        const contactForm = document.getElementById('contactForm');
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // Simulate form submission
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerText;
+            submitBtn.innerText = 'Sending...';
+            submitBtn.disabled = true;
+            
+            // Simulate API call with timeout
+            setTimeout(() => {
+                alert('Message sent successfully! I will get back to you soon.');
+                contactForm.reset();
+                submitBtn.innerText = originalText;
+                submitBtn.disabled = false;
+            }, 1500);
+        });
+
+        // Animation on scroll
+        const animateElements = document.querySelectorAll('.animate');
+        const animateOnScroll = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    animateOnScroll.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animateElements.forEach(element => {
+            animateOnScroll.observe(element);
+        });
+    </script>
+</body>
+</html>
