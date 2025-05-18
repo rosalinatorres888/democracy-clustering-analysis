@@ -3,1350 +3,1532 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rosalina Torres | Data Analytics Engineer</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Machine Learning Discovers Democracy | Interactive Story</title>
+    <!-- Modern visualization libraries -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Animation library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Variables */
         :root {
-            --primary: #26c3a6;
-            --primary-dark: #1e9a86;
-            --secondary: #BA68C8;
-            --dark: #333333;
-            --light: #f8f9fa;
-            --accent1: #FF5733;
-            --accent2: #4285F4;
-            --text: #333333;
-            --background: #ffffff;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Primary colors */
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            
+            /* Regime colors */
+            --full-democracy: #4cc9f0;
+            --flawed-democracy: #4895ef;
+            --hybrid-regime: #f9c74f;
+            --authoritarian: #f94144;
+            
+            /* Backgrounds */
+            --bg-main: #fdfeff;
+            --bg-card: #ffffff;
+            --bg-dark: #212529;
+            
+            /* Text colors */
+            --text-primary: #2b2d42;
+            --text-secondary: #586069;
+            --text-light: #f8f9fa;
+            
+            /* UI elements */
+            --border-radius: 12px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             --transition: all 0.3s ease;
         }
 
-        /* Global Styles */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 70px;
         }
 
         body {
-            background-color: var(--background);
-            color: var(--text);
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
             line-height: 1.6;
-        }
-
-        section {
-            padding: 80px 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
+            overflow-x: hidden;
         }
 
         .container {
-            width: 90%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
-        h1, h2, h3, h4 {
-            margin-bottom: 20px;
-            font-weight: 600;
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 0 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="1.5" fill="rgba(255,255,255,0.2)"/></svg>');
+            background-size: 30px 30px;
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
         }
 
         h1 {
-            font-size: 2.8rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.2rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
         h2 {
-            font-size: 2.2rem;
-            position: relative;
-            display: inline-block;
-            margin-bottom: 40px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            opacity: 0.9;
         }
 
-        h2::after {
-            content: '';
-            position: absolute;
-            width: 50%;
-            height: 3px;
-            background-color: var(--primary);
-            bottom: -10px;
-            left: 0;
-        }
-
-        p {
-            margin-bottom: 20px;
-        }
-
-        a {
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
             color: var(--primary);
+        }
+
+        .author-info {
+            display: inline-block;
+            background-color: rgba(255,255,255,0.15);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            margin-top: 1rem;
+        }
+
+        /* Navigation */
+        .story-nav {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: space-around;
+            padding: 1rem;
+            margin-top: -3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            z-index: 10;
+            box-shadow: var(--box-shadow);
+        }
+
+        .nav-item {
             text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 0.75rem 1.25rem;
+            border-radius: 6px;
             transition: var(--transition);
         }
 
-        a:hover {
-            color: var(--primary-dark);
+        .nav-item:hover {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
         }
 
-        button, .btn {
+        .nav-item.active {
             background-color: var(--primary);
             color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            display: inline-block;
         }
 
-        button:hover, .btn:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
+        /* Story Sections */
+        .story-section {
+            margin-bottom: 5rem;
+            scroll-margin-top: 2rem;
+            opacity: 0; /* Start hidden for animation */
+            transform: translateY(20px); /* Start below final position */
         }
 
-        img {
-            max-width: 100%;
-            border-radius: 5px;
-        }
-
-        /* Header */
-        header {
-            background-color: rgba(255, 255, 255, 0.95);
-            box-shadow: var(--shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            padding: 15px 0;
-            transition: var(--transition);
-        }
-
-        header.scrolled {
-            padding: 10px 0;
-            background-color: rgba(255, 255, 255, 0.98);
-        }
-
-        nav {
+        .section-header {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            margin-bottom: 2rem;
         }
 
-        .logo {
-            font-size: 1.5rem;
+        .section-number {
+            font-size: 3rem;
             font-weight: 700;
             color: var(--primary);
+            opacity: 0.2;
+            margin-right: 1rem;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        .logo span {
-            color: var(--dark);
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-        }
-
-        .nav-links li {
-            margin-left: 30px;
-        }
-
-        .nav-links a {
-            color: var(--dark);
-            font-weight: 500;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            background-color: var(--primary);
-            bottom: -5px;
-            left: 0;
-            transition: var(--transition);
-        }
-
-        .nav-links a:hover::after, .nav-links a.active::after {
-            width: 100%;
-        }
-
-        .menu-toggle {
-            display: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-        }
-
-        /* Hero Section */
-        #hero {
-            background: linear-gradient(135deg, rgba(38, 195, 166, 0.1) 0%, rgba(255, 255, 255, 0.9) 100%);
-            position: relative;
-            overflow: hidden;
-            padding-top: 120px;
-        }
-
-        .hero-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .hero-text {
-            flex: 1;
-            min-width: 300px;
-            margin-right: 50px;
-        }
-
-        .hero-text h1 {
-            margin-bottom: 15px;
-            color: var(--dark);
-        }
-
-        .hero-text p {
-            font-size: 1.1rem;
-            margin-bottom: 30px;
-            max-width: 600px;
-        }
-
-        .hero-image {
-            flex: 1;
-            min-width: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero-image img {
-            max-width: 400px;
-            border-radius: 50%;
-            box-shadow: var(--shadow);
-            border: 5px solid white;
-        }
-
-        .social-links {
-            display: flex;
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            margin-right: 15px;
-            transition: var(--transition);
-        }
-
-        .social-links a:nth-child(1) {
-            background-color: #0A66C2; /* LinkedIn */
-        }
-
-        .social-links a:nth-child(2) {
-            background-color: #333; /* GitHub */
-        }
-
-        .social-links a:nth-child(3) {
-            background-color: #DB4437; /* Email */
-        }
-
-        .social-links a:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
-        }
-
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            margin-top: 30px;
-        }
-
-        .tech-badge {
-            background-color: white;
-            border-radius: 5px;
-            padding: 8px 12px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            color: var(--dark);
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-        }
-
-        .tech-badge i {
-            margin-right: 5px;
-            color: var(--primary);
-        }
-
-        /* About Section */
-        #about {
-            background-color: var(--light);
-        }
-
-        .about-content {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .about-image {
-            flex: 1;
-            min-width: 300px;
-            margin-right: 50px;
-        }
-
-        .about-image img {
-            border-radius: 10px;
-            box-shadow: var(--shadow);
-        }
-
-        .about-text {
-            flex: 2;
-            min-width: 300px;
-        }
-
-        .about-text h2 {
-            color: var(--dark);
-        }
-
-        .skill-bars {
-            margin-top: 30px;
-        }
-
-        .skill-bar {
-            margin-bottom: 20px;
-        }
-
-        .skill-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-
-        .skill-progress {
-            height: 10px;
-            width: 100%;
-            background-color: #e1e1e1;
-            border-radius: 5px;
-            overflow: hidden;
-        }
-
-        .skill-progress-bar {
-            height: 100%;
-            border-radius: 5px;
-            transition: width 1s ease;
-        }
-
-        .skill-progress-bar.python {
-            width: 0;
-            background-color: #3776AB;
-        }
-
-        .skill-progress-bar.ml {
-            width: 0;
-            background-color: var(--secondary);
-        }
-
-        .skill-progress-bar.data {
-            width: 0;
-            background-color: var(--accent1);
-        }
-
-        .skill-progress-bar.viz {
-            width: 0;
-            background-color: var(--accent2);
-        }
-
-        /* Projects Section */
-        #projects {
-            background-color: white;
-        }
-
-        .section-intro {
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto 50px;
-        }
-
-        .section-intro h2 {
-            display: inline-block;
-            margin-bottom: 20px;
-        }
-
-        .section-intro h2::after {
-            left: 25%;
-            width: 50%;
-        }
-
-        .project-filters {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
-        }
-
-        .project-filter {
-            background-color: white;
-            color: var(--dark);
-            border: 1px solid #e1e1e1;
-            padding: 8px 20px;
-            margin: 0 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .project-filter.active, .project-filter:hover {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 30px;
-        }
-
-        .project-card {
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            position: relative;
-            height: 450px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .project-image {
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .project-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: var(--transition);
-        }
-
-        .project-card:hover .project-image img {
-            transform: scale(1.05);
-        }
-
-        .project-content {
-            padding: 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-title {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            color: var(--dark);
-            flex: 0;
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-            flex: 0;
-        }
-
-        .project-tag {
-            background-color: #f1f1f1;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            color: var(--dark);
-        }
-
-        .project-description {
-            color: #666;
-            margin-bottom: 20px;
-            flex: 1;
-        }
-
-        .project-links {
-            display: flex;
-            margin-top: auto;
-        }
-
-        .project-links a {
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 0.9rem;
-            margin-right: 10px;
-            display: flex;
-            align-items: center;
-        }
-
-        .project-links a i {
-            margin-right: 5px;
-        }
-
-        .project-links a.demo {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .project-links a.github {
-            background-color: var(--dark);
-            color: white;
-        }
-
-        /* Resume Section */
-        #resume {
-            background-color: var(--light);
-        }
-
-        .resume-download {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .resume-download .btn {
-            display: inline-flex;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-
-        .resume-download .btn i {
-            margin-right: 10px;
-        }
-
-        .timeline-content {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .timeline-column {
-            flex: 1;
-            min-width: 300px;
-            padding: 0 20px;
-        }
-
-        .timeline-column h3 {
-            color: var(--dark);
-            margin-bottom: 25px;
-            font-size: 1.5rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .timeline-column h3::after {
-            content: '';
-            position: absolute;
-            width: 50%;
-            height: 2px;
-            background-color: var(--primary);
-            bottom: -8px;
-            left: 0;
-        }
-
-        .timeline-item {
-            border-left: 2px solid var(--primary);
-            padding: 0 0 30px 20px;
-            position: relative;
-        }
-
-        .timeline-item:last-child {
-            padding-bottom: 0;
-        }
-
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            left: -7px;
-            top: 5px;
-        }
-
-        .timeline-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .timeline-item-title {
+        .section-title {
+            font-size: 1.75rem;
             font-weight: 600;
-            color: var(--dark);
-            font-size: 1.1rem;
-        }
-
-        .timeline-item-subtitle {
             color: var(--primary);
-            font-style: italic;
-            margin-bottom: 5px;
-        }
-
-        .timeline-item-date {
-            background-color: var(--primary);
-            color: white;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            white-space: nowrap;
-        }
-
-        .timeline-item-description {
-            color: #666;
-        }
-
-        /* Contact Section */
-        #contact {
-            background-color: white;
-        }
-
-        .contact-content {
-            display: flex;
-            flex-wrap: wrap;
-        }
-
-        .contact-info {
             flex: 1;
-            min-width: 300px;
-            margin-right: 50px;
         }
 
-        .contact-form {
-            flex: 2;
-            min-width: 300px;
-        }
-
-        .contact-info h2 {
-            color: var(--dark);
-        }
-
-        .contact-info p {
-            margin-bottom: 30px;
-        }
-
-        .contact-method {
-            display: flex;
+        /* General Layout Components */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
             align-items: center;
-            margin-bottom: 20px;
         }
 
-        .contact-method i {
-            width: 40px;
-            height: 40px;
-            background-color: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-right: 15px;
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            height: 100%;
         }
 
-        .contact-method-details h4 {
-            margin-bottom: 5px;
-            color: var(--dark);
+        .text-card {
+            padding: 2rem;
         }
 
-        .contact-method-details p {
-            margin-bottom: 0;
-            color: #666;
+        .vis-card {
+            height: 450px;
+            overflow: hidden;
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        /* Insights Cards */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--dark);
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #e1e1e1;
-            border-radius: 5px;
-            font-size: 1rem;
+        .insight-card {
+            background-color: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+            min-height: 220px;
             transition: var(--transition);
         }
 
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(38, 195, 166, 0.2);
+        .insight-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
-        textarea.form-control {
-            height: 150px;
-            resize: none;
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
         }
 
-        .form-submit {
-            text-align: right;
+        .insight-card:nth-child(1)::before {
+            background-color: var(--full-democracy);
         }
 
+        .insight-card:nth-child(2)::before {
+            background-color: var(--flawed-democracy);
+        }
+
+        .insight-card:nth-child(3)::before {
+            background-color: var(--hybrid-regime);
+        }
+
+        .insight-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        /* Feature Importance Bars */
+        .feature-bar {
+            height: 2rem;
+            background-color: #f1f5f9;
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-fill {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 1rem;
+            color: white;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .feature-label {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Interactive Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .control-button {
+            background-color: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .control-button:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .control-button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Country Explorer */
+        .country-selector {
+            padding: 0.75rem;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            margin-bottom: 1rem;
+            font-family: inherit;
+        }
+
+        .country-card {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .country-info {
+            flex: 1;
+        }
+
+        .country-name {
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        .regime-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: white;
+        }
+
+        /* Borderline Cases Section */
+        .borderline-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .borderline-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 1.5rem;
+            border-left: 5px solid var(--accent);
+            transition: var(--transition);
+        }
+        
+        .borderline-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .probability-bar {
+            height: 8px;
+            background-color: #f1f5f9;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .probability-fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, var(--flawed-democracy) 0%, var(--hybrid-regime) 100%);
+        }
+
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .insights-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .story-nav {
+                flex-wrap: wrap;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
         /* Footer */
         footer {
-            background-color: var(--dark);
-            color: white;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding: 3rem 0;
             text-align: center;
-            padding: 30px 0;
+            margin-top: 4rem;
         }
-
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
         .footer-content p {
-            margin-bottom: 0;
-        }
-
-        .back-to-top {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 40px;
-            height: 40px;
-            background-color: var(--primary);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            opacity: 0;
-            transition: var(--transition);
-            z-index: 99;
-        }
-
-        .back-to-top.visible {
-            opacity: 1;
-        }
-
-        .back-to-top:hover {
-            background-color: var(--primary-dark);
-            transform: translateY(-3px);
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 992px) {
-            h1 {
-                font-size: 2.4rem;
-            }
-
-            h2 {
-                font-size: 2rem;
-            }
-
-            section {
-                padding: 60px 0;
-            }
-
-            .hero-text {
-                margin-right: 0;
-                margin-bottom: 40px;
-            }
-
-            .hero-image img {
-                max-width: 300px;
-            }
-
-            .about-image {
-                margin-right: 0;
-                margin-bottom: 40px;
-            }
-
-            .contact-info {
-                margin-right: 0;
-                margin-bottom: 40px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: 0;
-                right: 0;
-                background-color: white;
-                flex-direction: column;
-                align-items: center;
-                padding: 20px 0;
-                box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
-                transform: translateY(-100%);
-                opacity: 0;
-                pointer-events: none;
-                transition: var(--transition);
-            }
-
-            .nav-links.active {
-                transform: translateY(0);
-                opacity: 1;
-                pointer-events: all;
-            }
-
-            .nav-links li {
-                margin: 10px 0;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
-
-            .hero-content, .about-content, .contact-content {
-                flex-direction: column;
-            }
-
-            .projects-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate {
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-        }
-
-        .animate-delay-1 {
-            animation-delay: 0.2s;
-        }
-
-        .animate-delay-2 {
-            animation-delay: 0.4s;
-        }
-
-        .animate-delay-3 {
-            animation-delay: 0.6s;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header id="header">
-        <div class="container">
-            <nav>
-                <div class="logo">Rosalina<span>Torres</span></div>
-                <ul class="nav-links">
-                    <li><a href="#hero" class="active">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#resume">Resume</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                <div class="menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </nav>
+    <header>
+        <div class="container header-content">
+            <h1>How Machine Learning Discovered Democracy</h1>
+            <h2>An Interactive Journey Through Unsupervised Clustering of Political Regimes</h2>
+            <div class="author-info">By Rosalina Torres, Data Analytics Engineering, MS Candidate</div>
         </div>
     </header>
-
-    <!-- Hero Section -->
-    <section id="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="hero-text animate">
-                    <h1>Data Analytics Engineer</h1>
-                    <p>Transforming complex data into actionable insights through machine learning and analytics. Graduate student at Northeastern University with 13+ years of enterprise technology experience.</p>
-                    <a href="#projects" class="btn">View My Work</a>
-                    <div class="social-links">
-                        <a href="https://linkedin.com/in/rosalina2" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="https://github.com/rosalinatorres888" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="mailto:rosalina7torres@gmail.com"><i class="fas fa-envelope"></i></a>
-                    </div>
-                    <div class="tech-stack">
-                        <div class="tech-badge"><i class="fab fa-python"></i> Python</div>
-                        <div class="tech-badge"><i class="fas fa-brain"></i> Machine Learning</div>
-                        <div class="tech-badge"><i class="fas fa-project-diagram"></i> Network Analysis</div>
-                        <div class="tech-badge"><i class="fas fa-chart-bar"></i> Data Visualization</div>
-                    </div>
+    
+    <div class="container">
+        <nav class="story-nav">
+            <a href="#data" class="nav-item">The Data</a>
+            <a href="#approach" class="nav-item">Unsupervised Approach</a>
+            <a href="#discovery" class="nav-item">The Discovery</a>
+            <a href="#us-downgrade" class="nav-item">US Downgrade</a>
+            <a href="#features" class="nav-item">Key Features</a>
+            <a href="#borderline" class="nav-item">Borderline Cases</a>
+            <a href="#insights" class="nav-item">Insights</a>
+        </nav>
+        
+        <!-- Section 1: The Data -->
+        <section id="data" class="story-section">
+            <div class="section-header">
+                <div class="section-number">01</div>
+                <h3 class="section-title">The Raw Political Data</h3>
+            </div>
+            
+            <div class="two-column">
+                <div class="card text-card">
+                    <p>The Economist Intelligence Unit's <strong>Democracy Index</strong> measures political systems worldwide using five key dimensions:</p>
+                    <ul style="margin-top: 1rem; margin-left: 1.5rem;">
+                        <li><strong>Electoral Process and Pluralism</strong>: Free and fair elections, universal suffrage</li>
+                        <li><strong>Functioning of Government</strong>: Checks and balances, transparency</li>
+                        <li><strong>Political Participation</strong>: Voter turnout, citizen engagement</li>
+                        <li><strong>Political Culture</strong>: Democratic values, peaceful transitions</li>
+                        <li><strong>Civil Liberties</strong>: Free speech, association, rule of law</li>
+                    </ul>
+                    <p style="margin-top: 1.5rem;">For my analysis, I removed all regime classifications and labels, giving the machine learning algorithms access only to the raw dimension scores. This created a <strong>truly unsupervised learning scenario</strong> - could AI identify meaningful political patterns on its own?</p>
                 </div>
-                <div class="hero-image animate animate-delay-1">
-                    <img src="https://api.placeholder.com/400/320" alt="Rosalina Torres">
+                <div class="card vis-card" id="dimension-distribution">
+                    <!-- Visualization will be inserted here -->
                 </div>
             </div>
+        </section>
+        
+        <!-- Section 2: Unsupervised Approach -->
+        <section id="approach" class="story-section">
+            <div class="section-header">
+                <div class="section-number">02</div>
+                <h3 class="section-title">The Unsupervised Approach</h3>
+            </div>
+            
+            <div class="controls">
+                <button class="control-button active" data-method="hierarchical">Hierarchical Clustering</button>
+                <button class="control-button" data-method="kmeans">K-Means</button>
+                <button class="control-button" data-method="gaussian">Gaussian Mixture</button>
+            </div>
+            
+            <div class="two-column">
+                <div class="card vis-card" id="clustering-method">
+                    <!-- Visualization will be inserted here -->
+                </div>
+                <div class="card text-card">
+                    <p>Unsupervised machine learning allows us to discover patterns without predetermined labels. I applied multiple clustering algorithms to the democracy data:</p>
+                    
+                    <div id="method-description" style="margin-top: 1.5rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;">Hierarchical Clustering</h4>
+                        <p>This algorithm builds a tree of clusters, grouping countries based on their similarity. It excelled at capturing the nuanced relationships between different democratic systems, achieving the highest alignment with expert regime classifications.</p>
+                    </div>
+                    
+                    <p style="margin-top: 1.5rem;">Before clustering, data was <strong>standardized</strong> to ensure all dimensions contributed equally to the analysis. This let the natural structure emerge without bias toward any particular dimension.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: The Discovery -->
+        <section id="discovery" class="story-section">
+            <div class="section-header">
+                <div class="section-number">03</div>
+                <h3 class="section-title">The Amazing Discovery</h3>
+            </div>
+            
+            <div class="card text-card" style="margin-bottom: 2rem;">
+                <p style="font-size: 1.25rem; text-align: center;">Without being told about democratic regime types, the machine learning algorithms <strong>naturally discovered four distinct clusters</strong> that closely match expert classifications!</p>
+            </div>
+            
+            <div class="controls">
+                <button class="control-button active" data-view="comparison">Compare Both</button>
+                <button class="control-button" data-view="machine">Machine Clusters</button>
+                <button class="control-button" data-view="expert">Expert Labels</button>
+            </div>
+            
+            <div class="card vis-card" style="height: 550px;" id="cluster-comparison">
+                <!-- Visualization will be inserted here -->
+            </div>
+            
+            <div style="margin-top: 2rem; text-align: center; background-color: #f8fafc; padding: 1.5rem; border-radius: var(--border-radius);">
+                <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">Adjusted Rand Index (ARI) measures similarity between clusterings</div>
+                <div class="feature-bar" style="max-width: 500px; margin: 0 auto;">
+                    <div class="feature-label">Hierarchical Clustering</div>
+                    <div class="feature-fill" style="width: 78%; background-color: var(--primary);">0.78</div>
+                </div>
+                <div class="feature-bar" style="max-width: 500px; margin: 0.75rem auto;">
+                    <div class="feature-label">K-Means</div>
+                    <div class="feature-fill" style="width: 57%; background-color: var(--accent);">0.57</div>
+                </div>
+                <p style="margin-top: 0.75rem; font-style: italic;">Higher ARI values indicate better alignment with expert classifications (max = 1.0)</p>
+            </div>
+        </section>
+        
+        <!-- Section 4: US Democracy Downgrade -->
+        <section id="us-downgrade" class="story-section">
+            <div class="section-header">
+                <div class="section-number">04</div>
+                <h3 class="section-title">The US Democracy Downgrade</h3>
+            </div>
+            
+            <div class="card text-card" style="margin-bottom: 2rem;">
+                <p>One of the most significant findings revealed by the clustering analysis was the confirmation of the United States' downgrade from a <span style="color: var(--full-democracy); font-weight: 500;">Full Democracy</span> to a <span style="color: var(--flawed-democracy); font-weight: 500;">Flawed Democracy</span>. This transition, which occurred in 2016, was independently detected by the machine learning algorithm.</p>
+            </div>
+            
+            <div class="controls">
+                <button class="control-button active" data-trend="all">All Countries</button>
+                <button class="control-button" data-trend="compare">US vs Norway</button>
+                <button class="control-button" data-trend="borderline">US vs Borderline Cases</button>
+            </div>
+            
+            <div class="card vis-card" style="height: 500px;" id="democracy-trends">
+                <!-- Trend visualization will be inserted here -->
+            </div>
+            
+            <div class="two-column" style="margin-top: 2rem;">
+                <div class="card text-card">
+                    <h4 style="color: var(--primary); margin-bottom: 1rem;">Dimensional Analysis: US vs Norway</h4>
+                    <p>While the US maintains strong scores in <strong>Electoral Process</strong> (9.17) and <strong>Civil Liberties</strong> (8.24), it shows significant weaknesses in:</p>
+                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>Functioning of Government</strong>: 6.43 (vs. Norway's 9.64)</li>
+                        <li><strong>Political Culture</strong>: 6.25 (vs. Norway's 10.00)</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">These dimensional gaps are precisely what the machine learning algorithms detected, placing the US firmly in a different cluster than full democracies.</p>
+                </div>
+                <div class="card vis-card" id="us-norway-comparison">
+                    <!-- US vs Norway radar chart will be inserted here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 5: Key Features -->
+        <section id="features" class="story-section">
+            <div class="section-header">
+                <div class="section-number">05</div>
+                <h3 class="section-title">The Critical Dimensions</h3>
+            </div>
+            
+            <div class="two-column">
+                <div class="card text-card">
+                    <p>Not all democratic dimensions were equally important in clustering countries. The machine learning algorithms revealed which aspects most strongly differentiate political regimes:</p>
+                    
+                    <div style="margin-top: 1.5rem;" id="feature-bars">
+                        <div class="feature-bar">
+                            <div class="feature-label">Civil Liberties</div>
+                            <div class="feature-fill" style="width: 90%;">0.90</div>
+                        </div>
+                        <div class="feature-bar">
+                            <div class="feature-label">Electoral Process</div>
+                            <div class="feature-fill" style="width: 86%;">0.86</div>
+                        </div>
+                        <div class="feature-bar">
+                            <div class="feature-label">Functioning of Government</div>
+                            <div class="feature-fill" style="width: 75%;">0.75</div>
+                        </div>
+                        <div class="feature-bar">
+                            <div class="feature-label">Political Culture</div>
+                            <div class="feature-fill" style="width: 72%;">0.72</div>
+                        </div>
+                        <div class="feature-bar">
+                            <div class="feature-label">Political Participation</div>
+                            <div class="feature-fill" style="width: 64%;">0.64</div>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 1.5rem; font-style: italic;">Feature importance was derived from the clustering algorithms' sensitivity to each dimension.</p>
+                </div>
+                <div class="card vis-card" id="feature-radar">
+                    <!-- Visualization will be inserted here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 6: Borderline Cases -->
+        <section id="borderline" class="story-section">
+            <div class="section-header">
+                <div class="section-number">06</div>
+                <h3 class="section-title">Discovering Borderline Cases</h3>
+            </div>
+            
+            <div class="card text-card" style="margin-bottom: 2rem;">
+                <p>One of the most fascinating discoveries was identifying countries that exist at the boundaries between regime types. These <strong>borderline cases</strong> reveal political systems in transition or with unique characteristics that don't fit neatly into a single category.</p>
+                
+                <p style="margin-top: 1rem;">The machine learning model assigned these countries <strong>probability scores</strong> for belonging to different clusters, revealing their ambiguous status.</p>
+            </div>
+            
+            <div class="borderline-cases">
+                <div class="borderline-card">
+                    <h4 style="margin-bottom: 0.5rem;">Hungary</h4>
+                    <p>Officially classified as a <span style="color: var(--flawed-democracy); font-weight: 500;">Flawed Democracy</span>, but machine learning detected characteristics of a <span style="color: var(--hybrid-regime); font-weight: 500;">Hybrid Regime</span>.</p>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 53%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>53% Flawed Democracy</span>
+                        <span>47% Hybrid Regime</span>
+                    </div>
+                </div>
+                
+                <div class="borderline-card">
+                    <h4 style="margin-bottom: 0.5rem;">Poland</h4>
+                    <p>Despite its <span style="color: var(--flawed-democracy); font-weight: 500;">Flawed Democracy</span> label, machine learning found significant <span style="color: var(--hybrid-regime); font-weight: 500;">Hybrid Regime</span> patterns.</p>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 51%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>51% Flawed Democracy</span>
+                        <span>49% Hybrid Regime</span>
+                    </div>
+                </div>
+                
+                <div class="borderline-card">
+                    <h4 style="margin-bottom: 0.5rem;">Mexico</h4>
+                    <p>Officially a <span style="color: var(--flawed-democracy); font-weight: 500;">Flawed Democracy</span> but showing strong indicators of <span style="color: var(--hybrid-regime); font-weight: 500;">Hybrid Regime</span> characteristics.</p>
+                    <div class="probability-bar">
+                        <div class="probability-fill" style="width: 48%;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+                        <span>48% Flawed Democracy</span>
+                        <span>52% Hybrid Regime</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card vis-card" style="margin-top: 2rem;" id="borderline-explorer">
+                <!-- Visualization will be inserted here -->
+            </div>
+        </section>
+        
+        <!-- Section 7: Key Insights -->
+        <section id="insights" class="story-section">
+            <div class="section-header">
+                <div class="section-number">07</div>
+                <h3 class="section-title">Key Research Insights</h3>
+            </div>
+            
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <div class="insight-title">Natural Patterns in Political Data</div>
+                    <p>Unsupervised machine learning naturally discovered four distinct clusters that closely align with expert-defined regime types. This validates that democratic classifications reflect inherent patterns in political data.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-title">Hierarchical Classification Works Best</div>
+                    <p>Hierarchical clustering outperformed other algorithms, suggesting that democratic systems exist in a nested relationship rather than as completely separate categories. Democracy exists on a spectrum, not in discrete boxes.</p>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-title">Data-Driven Early Warning System</div>
+                    <p>Machine learning discovered borderline cases before political scientists recognized their ambiguous status. This suggests AI could serve as an early warning system for democratic backsliding or advancement.</p>
+                </div>
+            </div>
+            
+            <div class="card text-card" style="margin-top: 2rem; text-align: center;">
+                <p style="font-size: 1.5rem; font-weight: 300; color: var(--primary);">When treated with care, <strong>data can speak</strong> — and sometimes, it echoes justice</p>
+                
+                <p style="margin-top: 1.5rem;">What's most remarkable isn't simply that machines can classify regimes—it's that they can discover the inherent structure of democracy independently, with no human guidance.</p>
+                
+                <p style="margin-top: 1rem;">This adds a powerful new perspective to political science: the patterns of democracy are not merely human constructs, but are embedded in the data itself.</p>
+            </div>
+        </section>
+        
+        <div style="margin-top: 3rem; text-align: center;">
+            <a href="index.html" style="display: inline-block; padding: 1rem 2rem; background-color: var(--primary); color: white; text-decoration: none; border-radius: 50px; font-weight: 500; box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3); transition: var(--transition);">
+                Return to Main Dashboard
+            </a>
         </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-image animate">
-                    <img src="https://api.placeholder.com/400/320" alt="About Rosalina">
-                </div>
-                <div class="about-text animate animate-delay-1">
-                    <h2>About Me</h2>
-                    <p>I'm a Data Analytics Engineering graduate student at Northeastern University with a background in enterprise technology partnerships and sales. My experience spans AI data training, network analysis, and machine learning applications.</p>
-                    <p>With over 13 years in the technology industry, I've developed a passion for transforming complex datasets into meaningful insights that drive business decisions. I specialize in creating machine learning models, network visualizations, and analytical pipelines that reveal patterns in seemingly unrelated data.</p>
-                    <div class="skill-bars">
-                        <div class="skill-bar">
-                            <div class="skill-info">
-                                <span>Python & ML Libraries</span>
-                                <span>90%</span>
-                            </div>
-                            <div class="skill-progress">
-                                <div class="skill-progress-bar python" data-width="90%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-info">
-                                <span>Machine Learning & AI</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="skill-progress">
-                                <div class="skill-progress-bar ml" data-width="85%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-info">
-                                <span>Data Analysis & Processing</span>
-                                <span>95%</span>
-                            </div>
-                            <div class="skill-progress">
-                                <div class="skill-progress-bar data" data-width="95%"></div>
-                            </div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-info">
-                                <span>Data Visualization</span>
-                                <span>88%</span>
-                            </div>
-                            <div class="skill-progress">
-                                <div class="skill-progress-bar viz" data-width="88%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects">
-        <div class="container">
-            <div class="section-intro animate">
-                <h2>My Projects</h2>
-                <p>Explore my portfolio of data science and machine learning projects. Each project demonstrates my technical skills and approach to solving complex problems through data.</p>
-            </div>
-            <div class="project-filters animate animate-delay-1">
-                <button class="project-filter active" data-filter="all">All</button>
-                <button class="project-filter" data-filter="ml">Machine Learning</button>
-                <button class="project-filter" data-filter="network">Network Analysis</button>
-                <button class="project-filter" data-filter="viz">Data Visualization</button>
-            </div>
-            <div class="projects-grid animate animate-delay-2">
-                <!-- Project 1 -->
-                <div class="project-card" data-category="ml">
-                    <div class="project-image">
-                        <img src="https://api.placeholder.com/400/320" alt="Clustering Democracy">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Clustering Democracy</h3>
-                        <div class="project-tags">
-                            <span class="project-tag">Machine Learning</span>
-                            <span class="project-tag">Python</span>
-                            <span class="project-tag">Hierarchical Clustering</span>
-                        </div>
-                        <p class="project-description">Unsupervised ML algorithms to analyze global governance patterns across democratic systems. Identified distinct democracy profiles and at-risk nations using clustering techniques.</p>
-                        <div class="project-links">
-                            <a href="#" class="demo"><i class="fas fa-external-link-alt"></i> View Demo</a>
-                            <a href="https://github.com/rosalinatorres888/democracy-clustering-analysis" class="github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project 2 -->
-                <div class="project-card" data-category="network">
-                    <div class="project-image">
-                        <img src="https://api.placeholder.com/400/320" alt="Network Word Frequency Analysis">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Network Word Frequency Analysis</h3>
-                        <div class="project-tags">
-                            <span class="project-tag">Network Analysis</span>
-                            <span class="project-tag">NLP</span>
-                            <span class="project-tag">NetworkX</span>
-                        </div>
-                        <p class="project-description">Applying network science to uncover semantic relationships within academic literature. Created knowledge graphs representing latent thematic structures.</p>
-                        <div class="project-links">
-                            <a href="#" class="demo"><i class="fas fa-external-link-alt"></i> View Demo</a>
-                            <a href="https://github.com/rosalinatorres888/Network-Word-Frequency-Analysis-for-Data-Mining" class="github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                        </div>
-                    </div>
-                </div>
-                <!-- Project 3 -->
-                <div class="project-card" data-category="ml viz">
-                    <div class="project-image">
-                        <img src="https://api.placeholder.com/400/320" alt="Human Activity Entropy">
-                    </div>
-                    <div class="project-content">
-                        <h3 class="project-title">Human Activity Entropy</h3>
-                        <div class="project-tags">
-                            <span class="project-tag">Time Series</span>
-                            <span class="project-tag">Python</span>
-                            <span class="project-tag">Data Visualization</span>
-                        </div>
-                        <p class="project-description">Analysis of human activity patterns using entropy and information theory principles. Visualized complexity in daily routines using wearable sensor data.</p>
-                        <div class="project-links">
-                            <a href="#" class="demo"><i class="fas fa-external-link-alt"></i> View Demo</a>
-                            <a href="https://github.com/rosalinatorres888/human-activity-entropy" class="github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Resume Section -->
-    <section id="resume">
-        <div class="container">
-            <div class="section-intro animate">
-                <h2>Resume & Experience</h2>
-                <p>My professional journey encompasses both technical expertise in data analytics and business experience in enterprise technology partnerships.</p>
-            </div>
-            <div class="resume-download animate animate-delay-1">
-                <a href="#" class="btn"><i class="fas fa-download"></i> Download Full Resume</a>
-            </div>
-            <div class="timeline-content animate animate-delay-2">
-                <div class="timeline-column">
-                    <h3>Education</h3>
-                    <div class="timeline-item">
-                        <div class="timeline-item-header">
-                            <div>
-                                <div class="timeline-item-title">MS in Data Analytics Engineering</div>
-                                <div class="timeline-item-subtitle">Northeastern University</div>
-                            </div>
-                            <div class="timeline-item-date">2024-2026</div>
-                        </div>
-                        <div class="timeline-item-description">
-                            Coursework in foundations of data analytics engineering, computation and visualization for analytics.
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-item-header">
-                            <div>
-                                <div class="timeline-item-title">BS in Economics & Spanish Literature</div>
-                                <div class="timeline-item-subtitle">Bridgewater State University</div>
-                            </div>
-                            <div class="timeline-item-date">Completed</div>
-                        </div>
-                        <div class="timeline-item-description">
-                            Double major combining quantitative economic analysis with language and literature studies.
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-item-header">
-                            <div>
-                                <div class="timeline-item-title">Professional Certifications</div>
-                                <div class="timeline-item-subtitle">Industry Credentials</div>
-                            </div>
-                            <div class="timeline-item-date">Various</div>
-                        </div>
-                        <div class="timeline-item-description">
-                            AWS Cloud Practitioner, Google Data Analytics, Google Cloud Generative AI Specialization, ChatGPT Advanced Analytics.
-                        </div>
-                    </div>
-                </div>
-                <div class="timeline-column">
-                    <h3>Work Experience</h3>
-                    <div class="timeline-item">
-                        <div class="timeline-item-header">
-                            <div>
-                                <div class="timeline-item-title">Spanish AI Data Trainer</div>
-                                <div class="timeline-item-subtitle">Alignerr</div>
-                            </div>
-                            <div class="timeline-item-date">2023-Present</div>
-                        </div>
-                        <div class="timeline-item-description">
-                            Annotate and refine AI datasets to improve model performance for NLP applications. Evaluate AI-generated code and optimize machine learning algorithms.
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-item-header">
-                            <div>
-                                <div class="timeline-item-title">Regional Manager - Partnerships</div>
-                                <div class="timeline-item-subtitle">Collibra</div>
-                            </div>
-                            <div class="timeline-item-date">2021-2023</div>
-                        </div>
-                        <div class="timeline-item-description">
-                            Generated $2.4M in new business ARR by pursuing partner opportunities. Conducted root cause analysis to identify process bottlenecks in partner operations.
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-item-header">
-                            <div>
-                                <div class="timeline-item-title">Regional Manager - Channel</div>
-                                <div class="timeline-item-subtitle">Zerto</div>
-                            </div>
-                            <div class="timeline-item-date">2017-2021</div>
-                        </div>
-                        <div class="timeline-item-description">
-                            Achieved Global Sales of the Year and President's Club honors. Attained 122% quota in FY19Q1 and 257% in FY19Q4.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact">
-        <div class="container">
-            <div class="section-intro animate">
-                <h2>Get In Touch</h2>
-                <p>Interested in collaborating or learning more about my work? Feel free to reach out using any of the methods below.</p>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info animate animate-delay-1">
-                    <div class="contact-method">
-                        <i class="fas fa-envelope"></i>
-                        <div class="contact-method-details">
-                            <h4>Email</h4>
-                            <p>rosalina7torres@gmail.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-method">
-                        <i class="fas fa-phone"></i>
-                        <div class="contact-method-details">
-                            <h4>Phone</h4>
-                            <p>+1 774.339.2255</p>
-                        </div>
-                    </div>
-                    <div class="contact-method">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div class="contact-method-details">
-                            <h4>Location</h4>
-                            <p>Boston, MA</p>
-                        </div>
-                    </div>
-                    <div class="contact-method">
-                        <i class="fab fa-linkedin-in"></i>
-                        <div class="contact-method-details">
-                            <h4>LinkedIn</h4>
-                            <p>linkedin.com/in/rosalina2</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="contact-form animate animate-delay-2">
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" id="name" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="subject">Subject</label>
-                            <input type="text" id="subject" class="form-control" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" class="form-control" required></textarea>
-                        </div>
-                        <div class="form-submit">
-                            <button type="submit" class="btn">Send Message</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
+    </div>
+    
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2025 Rosalina Torres. All rights reserved.</p>
-            </div>
+        <div class="footer-content">
+            <p>Data source: Economist Intelligence Unit Democracy Index</p>
+            <p>Compiled by Rosalina Torres as part of democracy clustering analysis project</p>
+            <p>Data Analytics Engineering, MS Candidate</p>
+            <p>© 2025 | Northeastern University</p>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <div class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </div>
-
-    <!-- Scripts -->
     <script>
-        // Mobile Navigation Toggle
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-
-        menuToggle.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-        });
-
-        // Close mobile menu when clicking on a link
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                navLinks.classList.remove('active');
-            });
-        });
-
-        // Active Navigation Link on Scroll
-        const sections = document.querySelectorAll('section');
-        const navItems = document.querySelectorAll('.nav-links a');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navItems.forEach(item => {
-                item.classList.remove('active');
-                if (item.getAttribute('href').substring(1) === current) {
-                    item.classList.add('active');
-                }
-            });
-        });
-
-        // Header background on scroll
-        const header = document.querySelector('header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-        // Back to Top Button
-        const backToTop = document.querySelector('.back-to-top');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 500) {
-                backToTop.classList.add('visible');
-            } else {
-                backToTop.classList.remove('visible');
-            }
-        });
-
-        backToTop.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        });
-
-        // Animate skill bars on scroll
-        const skillBars = document.querySelectorAll('.skill-progress-bar');
-        const animateSkillBars = () => {
-            skillBars.forEach(bar => {
-                const width = bar.getAttribute('data-width');
-                bar.style.width = width;
-            });
+        // Data for the visualizations
+        const regimeColors = {
+            'Full Democracy': '#4cc9f0',
+            'Flawed Democracy': '#4895ef',
+            'Hybrid Regime': '#f9c74f',
+            'Authoritarian': '#f94144',
+            'Cluster 1': '#4cc9f0',
+            'Cluster 2': '#4895ef',
+            'Cluster 3': '#f9c74f',
+            'Cluster 4': '#f94144'
         };
+        
+        const countries = [
+            {name: 'Norway', electoral: 10.00, civil: 9.71, functioning: 9.64, participation: 10.00, culture: 10.00, score: 9.81, expertLabel: 'Full Democracy', mlCluster: 'Cluster 1'},
+            {name: 'New Zealand', electoral: 10.00, civil: 9.71, functioning: 9.29, participation: 8.89, culture: 10.00, score: 9.61, expertLabel: 'Full Democracy', mlCluster: 'Cluster 1'},
+            {name: 'United States', electoral: 9.17, civil: 8.24, functioning: 6.43, participation: 7.78, culture: 6.25, score: 7.85, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 2'},
+            {name: 'France', electoral: 9.58, civil: 8.82, functioning: 6.79, participation: 7.78, culture: 6.88, score: 7.99, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 2'},
+            {name: 'Hungary', electoral: 7.83, civil: 6.47, functioning: 5.71, participation: 5.00, culture: 5.63, score: 6.12, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 3', isBorderline: true},
+            {name: 'Poland', electoral: 7.83, civil: 7.06, functioning: 5.36, participation: 5.56, culture: 4.38, score: 6.09, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 3', isBorderline: true},
+            {name: 'Mexico', electoral: 7.50, civil: 5.59, functioning: 5.36, participation: 7.22, culture: 4.38, score: 6.07, expertLabel: 'Flawed Democracy', mlCluster: 'Cluster 3', isBorderline: true},
+            {name: 'Turkey', electoral: 5.83, civil: 3.24, functioning: 5.00, participation: 5.56, culture: 5.00, score: 5.04, expertLabel: 'Hybrid Regime', mlCluster: 'Cluster 3'},
+            {name: 'Russia', electoral: 2.17, civil: 2.94, functioning: 1.79, participation: 5.00, culture: 3.13, score: 2.94, expertLabel: 'Authoritarian', mlCluster: 'Cluster 4'},
+            {name: 'China', electoral: 0.00, civil: 1.18, functioning: 4.29, participation: 3.33, culture: 2.50, score: 1.94, expertLabel: 'Authoritarian', mlCluster: 'Cluster 4'}
+        ];
 
-        // Intersection Observer for skill bars
-        const skillSection = document.querySelector('#about');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateSkillBars();
-                    observer.unobserve(entry.target);
+        // Sample cluster statistics
+        const clusterStats = {
+            'hierarchical': {
+                name: 'Hierarchical Clustering',
+                ari: 0.78,
+                description: 'This algorithm builds a tree of clusters, grouping countries based on their similarity. It excelled at capturing the nuanced relationships between different democratic systems, achieving the highest alignment with expert regime classifications.',
+                visualization: 'tree'
+            },
+            'kmeans': {
+                name: 'K-Means Clustering',
+                ari: 0.57,
+                description: 'K-Means partitions countries into distinct clusters while minimizing within-cluster variance. While effective, it was less nuanced than hierarchical methods, particularly for countries at regime boundaries.',
+                visualization: 'scatter'
+            },
+            'gaussian': {
+                name: 'Gaussian Mixture',
+                ari: 0.52,
+                description: 'This model assumes countries come from a mixture of gaussian distributions. It provides probability estimates for cluster membership, making it useful for identifying borderline cases, but had lower overall accuracy.',
+                visualization: 'ellipse'
+            }
+        };
+        
+        // Create dimension distribution visualization
+        function createDimensionDistribution() {
+            // Prepare data
+            const dimensions = ['Electoral Process', 'Functioning of Govt', 'Political Participation', 'Political Culture', 'Civil Liberties'];
+            
+            // Calculate averages by regime type
+            const regimeTypes = ['Full Democracy', 'Flawed Democracy', 'Hybrid Regime', 'Authoritarian'];
+            const averagesByRegime = {};
+            
+            regimeTypes.forEach(regime => {
+                averagesByRegime[regime] = {
+                    electoral: 0,
+                    functioning: 0,
+                    participation: 0,
+                    culture: 0,
+                    civil: 0,
+                    count: 0
+                };
+            });
+            
+            countries.forEach(country => {
+                const regime = country.expertLabel;
+                averagesByRegime[regime].electoral += country.electoral;
+                averagesByRegime[regime].functioning += country.functioning;
+                averagesByRegime[regime].participation += country.participation;
+                averagesByRegime[regime].culture += country.culture;
+                averagesByRegime[regime].civil += country.civil;
+                averagesByRegime[regime].count += 1;
+            });
+            
+            regimeTypes.forEach(regime => {
+                if(averagesByRegime[regime].count > 0) {
+                    averagesByRegime[regime].electoral /= averagesByRegime[regime].count;
+                    averagesByRegime[regime].functioning /= averagesByRegime[regime].count;
+                    averagesByRegime[regime].participation /= averagesByRegime[regime].count;
+                    averagesByRegime[regime].culture /= averagesByRegime[regime].count;
+                    averagesByRegime[regime].civil /= averagesByRegime[regime].count;
                 }
             });
-        }, { threshold: 0.5 });
-
-        observer.observe(skillSection);
-
-        // Project Filtering
-        const projectFilters = document.querySelectorAll('.project-filter');
-        const projectCards = document.querySelectorAll('.project-card');
-
-        projectFilters.forEach(filter => {
-            filter.addEventListener('click', () => {
-                // Remove active class from all filters
-                projectFilters.forEach(f => f.classList.remove('active'));
-                // Add active class to current filter
-                filter.classList.add('active');
+            
+            // Create radar chart data
+            const data = regimeTypes.map(regime => {
+                return {
+                    type: 'scatterpolar',
+                    r: [
+                        averagesByRegime[regime].electoral,
+                        averagesByRegime[regime].functioning,
+                        averagesByRegime[regime].participation,
+                        averagesByRegime[regime].culture,
+                        averagesByRegime[regime].civil
+                    ],
+                    theta: dimensions,
+                    fill: 'toself',
+                    name: regime,
+                    line: {
+                        color: regimeColors[regime]
+                    },
+                    fillcolor: regimeColors[regime] + '40'
+                };
+            });
+            
+            const layout = {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 10]
+                    }
+                },
+                showlegend: true,
+                legend: {
+                    orientation: 'h',
+                    y: -0.2
+                },
+                margin: {
+                    l: 50,
+                    r: 50,
+                    t: 50,
+                    b: 50
+                },
+                title: 'Democracy Dimensions by Regime Type'
+            };
+            
+            Plotly.newPlot('dimension-distribution', data, layout);
+        }
+        
+        // Create clustering methods visualization
+        function createClusteringMethod(method) {
+            const methodInfo = clusterStats[method];
+            
+            let data, layout;
+            
+            // Different visualizations based on method type
+            if (method === 'hierarchical') {
+                // Create a dendrogram-like visualization
+                data = [{
+                    type: 'scatter',
+                    mode: 'markers+text',
+                    x: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    y: [1, 2, 1, 3, 2, 1, 2, 3, 4, 3],
+                    text: countries.map(c => c.name),
+                    textposition: 'top center',
+                    marker: {
+                        size: 10,
+                        color: countries.map(c => regimeColors[c.expertLabel])
+                    },
+                    hoverinfo: 'text',
+                    name: 'Countries'
+                }];
                 
-                const filterValue = filter.getAttribute('data-filter');
+                // Add connecting lines to simulate dendrogram
+                const shapes = [
+                    {type: 'line', x0: 1, y0: 1, x1: 3, y1: 1, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 3, y0: 1, x1: 6, y1: 1, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 6, y0: 1, x1: 8, y1: 1, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 2, y0: 2, x1: 5, y1: 2, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 5, y0: 2, x1: 7, y1: 2, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 4, y0: 3, x1: 9, y1: 3, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 8, y0: 3, x1: 10, y1: 3, line: {color: 'gray', width: 1}},
+                    {type: 'line', x0: 9, y0: 3, x1: 9, y1: 4, line: {color: 'gray', width: 1}}
+                ];
                 
-                // Show/hide projects based on filter
-                projectCards.forEach(card => {
-                    if (filterValue === 'all') {
-                        card.style.display = 'block';
-                    } else {
-                        const categories = card.getAttribute('data-category').split(' ');
-                        if (categories.includes(filterValue)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
+                layout = {
+                    title: 'Hierarchical Clustering (ARI = 0.78)',
+                    shapes: shapes,
+                    showlegend: false,
+                    xaxis: {showticklabels: false, zeroline: false, showgrid: false},
+                    yaxis: {showticklabels: false, zeroline: false, showgrid: false},
+                    annotations: [{
+                        x: 5,
+                        y: 4.5,
+                        text: 'Countries are grouped in a hierarchical structure<br>based on similarity across all dimensions',
+                        showarrow: false,
+                        font: {size: 12}
+                    }],
+                    margin: {l: 40, r: 40, t: 60, b: 40},
+                    height: 400
+                };
+            } else if (method === 'kmeans') {
+                // Create a k-means visualization with centroids
+                const centroids = [
+                    {x: 9.5, y: 9.5, label: 'Cluster 1'},
+                    {x: 8.5, y: 7.5, label: 'Cluster 2'},
+                    {x: 6.5, y: 5.0, label: 'Cluster 3'},
+                    {x: 1.5, y: 2.0, label: 'Cluster 4'}
+                ];
+                
+                data = [
+                    {
+                        type: 'scatter',
+                        x: countries.map(c => c.electoral),
+                        y: countries.map(c => c.civil),
+                        mode: 'markers+text',
+                        text: countries.map(c => c.name),
+                        textposition: 'top center',
+                        marker: {
+                            size: countries.map(c => c.score * 1.5),
+                            color: countries.map(c => regimeColors[c.mlCluster]),
+                            opacity: 0.7
+                        },
+                        hoverinfo: 'text',
+                        name: 'Countries'
+                    },
+                    {
+                        type: 'scatter',
+                        x: centroids.map(c => c.x),
+                        y: centroids.map(c => c.y),
+                        mode: 'markers',
+                        marker: {
+                            size: 15,
+                            color: centroids.map(c => regimeColors[c.label]),
+                            symbol: 'x',
+                            line: {width: 2, color: 'black'}
+                        },
+                        hoverinfo: 'text',
+                        text: centroids.map(c => `${c.label} Centroid`),
+                        name: 'Centroids'
+                    }
+                ];
+                
+                layout = {
+                    title: 'K-Means Clustering (ARI = 0.57)',
+                    xaxis: {title: 'Electoral Process', range: [0, 10]},
+                    yaxis: {title: 'Civil Liberties', range: [0, 10]},
+                    annotations: [{
+                        x: 5,
+                        y: 9,
+                        text: 'X marks show cluster centroids',
+                        showarrow: false,
+                        font: {size: 12}
+                    }],
+                    margin: {l: 40, r: 40, t: 60, b: 40},
+                    height: 400
+                };
+            } else if (method === 'gaussian') {
+                // Gaussian mixture visualization with probability ellipses
+                data = [
+                    {
+                        type: 'scatter',
+                        x: countries.map(c => c.electoral),
+                        y: countries.map(c => c.civil),
+                        mode: 'markers+text',
+                        text: countries.map(c => c.name),
+                        textposition: 'top center',
+                        marker: {
+                            size: countries.map(c => c.score * 1.5),
+                            color: countries.map(c => regimeColors[c.mlCluster]),
+                            opacity: 0.7
+                        },
+                        hoverinfo: 'text',
+                        name: 'Countries'
+                    }
+                ];
+                
+                // Add ellipse shapes representing Gaussian distributions
+                const shapes = [
+                    {type: 'circle', x0: 8.5, y0: 8.5, x1: 10.5, y1: 10.5, fillcolor: regimeColors['Cluster 1'] + '30', line: {width: 0}},
+                    {type: 'circle', x0: 7.5, y0: 6.5, x1: 9.5, y1: 8.5, fillcolor: regimeColors['Cluster 2'] + '30', line: {width: 0}},
+                    {type: 'circle', x0: 5.5, y0: 3.5, x1: 7.5, y1: 5.5, fillcolor: regimeColors['Cluster 3'] + '30', line: {width: 0}},
+                    {type: 'circle', x0: 0.5, y0: 0.5, x1: 2.5, y1: 2.5, fillcolor: regimeColors['Cluster 4'] + '30', line: {width: 0}}
+                ];
+                
+                layout = {
+                    title: 'Gaussian Mixture Model (ARI = 0.52)',
+                    xaxis: {title: 'Electoral Process', range: [0, 10]},
+                    yaxis: {title: 'Civil Liberties', range: [0, 10]},
+                    shapes: shapes,
+                    annotations: [{
+                        x: 5,
+                        y: 9,
+                        text: 'Colored regions show probability distributions',
+                        showarrow: false,
+                        font: {size: 12}
+                    }],
+                    margin: {l: 40, r: 40, t: 60, b: 40},
+                    height: 400
+                };
+            }
+            
+            Plotly.newPlot('clustering-method', data, layout);
+            
+            // Update the method description
+            document.getElementById('method-description').innerHTML = `
+                <h4 style="color: var(--primary); margin-bottom: 0.5rem;">${methodInfo.name} (ARI = ${methodInfo.ari})</h4>
+                <p>${methodInfo.description}</p>
+            `;
+        }
+        
+        // Create cluster comparison visualization
+        function createClusterComparison(view = 'comparison') {
+            const data = [];
+            
+            if (view === 'comparison' || view === 'machine') {
+                // ML-discovered clusters
+                data.push({
+                    type: 'scatter',
+                    x: countries.map(c => c.electoral),
+                    y: countries.map(c => c.civil),
+                    mode: 'markers',
+                    marker: {
+                        size: countries.map(c => c.score * 2),
+                        color: countries.map(c => regimeColors[c.mlCluster]),
+                        line: {
+                            color: 'white',
+                            width: 1
                         }
+                    },
+                    text: countries.map(c => `${c.name}<br>ML Cluster: ${c.mlCluster}<br>Score: ${c.score}`),
+                    name: 'Machine Learning Clusters',
+                    hoverinfo: 'text'
+                });
+            }
+            
+            if (view === 'comparison' || view === 'expert') {
+                // Expert-defined regimes
+                const xOffset = view === 'comparison' ? 0.3 : 0;
+                data.push({
+                    type: 'scatter',
+                    x: countries.map(c => c.electoral + (view === 'comparison' ? (c.isBorderline ? -0.3 : 0) : 0)),
+                    y: countries.map(c => c.civil + (view === 'comparison' ? (c.isBorderline ? -0.3 : 0) : 0)),
+                    mode: 'markers',
+                    marker: {
+                        size: countries.map(c => c.score * 2),
+                        color: countries.map(c => regimeColors[c.expertLabel]),
+                        symbol: view === 'comparison' ? 'circle-open' : 'circle',
+                        line: {
+                            color: 'black',
+                            width: view === 'comparison' ? 2 : 0
+                        }
+                    },
+                    text: countries.map(c => `${c.name}<br>Expert Label: ${c.expertLabel}<br>Score: ${c.score}`),
+                    name: 'Expert Classifications',
+                    hoverinfo: 'text'
+                });
+            }
+            
+            // Regime boundary lines
+            const shapes = [
+                {type: 'line', x0: 0, y0: 8.01, x1: 10, y1: 8.01, line: {color: regimeColors['Full Democracy'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 8.01, y0: 0, x1: 8.01, y1: 10, line: {color: regimeColors['Full Democracy'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 0, y0: 6.01, x1: 10, y1: 6.01, line: {color: regimeColors['Flawed Democracy'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 6.01, y0: 0, x1: 6.01, y1: 10, line: {color: regimeColors['Flawed Democracy'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 0, y0: 4.01, x1: 10, y1: 4.01, line: {color: regimeColors['Hybrid Regime'], width: 1, dash: 'dash'}},
+                {type: 'line', x0: 4.01, y0: 0, x1: 4.01, y1: 10, line: {color: regimeColors['Hybrid Regime'], width: 1, dash: 'dash'}}
+            ];
+            
+            const layout = {
+                title: view === 'comparison' ? 'Machine Learning Clusters vs Expert Classifications' :
+                       view === 'machine' ? 'Machine-Discovered Clusters (No Labels Used)' : 
+                       'Expert-Defined Regime Types',
+                xaxis: {title: 'Electoral Process', range: [0, 10]},
+                yaxis: {title: 'Civil Liberties', range: [0, 10]},
+                shapes: shapes,
+                height: 500,
+                legend: {
+                    orientation: 'h',
+                    y: -0.15
+                },
+                annotations: view === 'comparison' ? [
+                    {
+                        x: 8.5,
+                        y: 1,
+                        text: 'Filled circles: ML clusters<br>Open circles: Expert labels',
+                        showarrow: false,
+                        bgcolor: 'white',
+                        borderpad: 4
+                    },
+                    {
+                        x: 2,
+                        y: 9,
+                        text: 'ARI = 0.78',
+                        showarrow: false,
+                        font: {size: 14, weight: 'bold'},
+                        bgcolor: 'white',
+                        borderpad: 4
+                    }
+                ] : []
+            };
+            
+            Plotly.newPlot('cluster-comparison', data, layout);
+        }
+        
+        // Create feature radar plot
+        function createFeatureRadar() {
+            const dimensions = ['Electoral Process', 'Civil Liberties', 'Functioning of Govt', 'Political Participation', 'Political Culture'];
+            
+            // Create average values for each regime type
+            const regimes = ['Full Democracy', 'Flawed Democracy', 'Hybrid Regime', 'Authoritarian'];
+            
+            const traces = regimes.map(regime => {
+                // Filter countries by regime
+                const filteredCountries = countries.filter(c => c.expertLabel === regime);
+                
+                // Calculate averages
+                const electoral = filteredCountries.reduce((sum, c) => sum + c.electoral, 0) / filteredCountries.length;
+                const civil = filteredCountries.reduce((sum, c) => sum + c.civil, 0) / filteredCountries.length;
+                const functioning = filteredCountries.reduce((sum, c) => sum + c.functioning, 0) / filteredCountries.length;
+                const participation = filteredCountries.reduce((sum, c) => sum + c.participation, 0) / filteredCountries.length;
+                const culture = filteredCountries.reduce((sum, c) => sum + c.culture, 0) / filteredCountries.length;
+                
+                return {
+                    type: 'scatterpolar',
+                    r: [electoral, civil, functioning, participation, culture],
+                    theta: dimensions,
+                    fill: 'toself',
+                    name: regime,
+                    line: {color: regimeColors[regime]},
+                    fillcolor: regimeColors[regime] + '40'
+                };
+            });
+            
+            const layout = {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 10]
+                    }
+                },
+                showlegend: true,
+                title: 'Democracy Dimensions by Regime Type',
+                legend: {
+                    orientation: 'h',
+                    y: -0.2
+                }
+            };
+            
+            Plotly.newPlot('feature-radar', traces, layout);
+        }
+        
+        // Create democracy trends visualization
+        function createDemocracyTrends(trendType = 'all') {
+            const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+            
+            // Democracy index scores over time
+            const trends = {
+                'Norway': [9.93, 9.93, 9.87, 9.87, 9.87, 9.81, 9.81, 9.81, 9.75, 9.81],
+                'United States': [8.05, 7.98, 7.98, 7.98, 7.96, 7.96, 7.92, 7.85, 7.85, 7.85],
+                'Sweden': [9.45, 9.39, 9.39, 9.39, 9.39, 9.26, 9.26, 9.39, 9.39, 9.39],
+                'New Zealand': [9.26, 9.26, 9.26, 9.26, 9.26, 9.25, 9.37, 9.37, 9.61, 9.61],
+                'Hungary': [7.53, 7.25, 7.00, 6.84, 6.64, 6.63, 6.56, 6.50, 6.12, 6.12],
+                'Poland': [7.09, 7.09, 7.09, 6.67, 6.67, 6.62, 6.57, 6.49, 6.09, 6.09],
+                'Mexico': [6.55, 6.47, 6.47, 6.41, 6.19, 6.09, 6.09, 6.07, 6.07, 6.07]
+            };
+            
+            // Full Democracy threshold
+            const fullDemocracyLine = {
+                type: 'scatter',
+                x: years,
+                y: Array(years.length).fill(8.01),
+                mode: 'lines',
+                name: 'Full Democracy Threshold',
+                line: {
+                    color: 'rgba(76, 201, 240, 0.5)',
+                    width: 1,
+                    dash: 'dash'
+                }
+            };
+            
+            // Flawed Democracy threshold
+            const flawedDemocracyLine = {
+                type: 'scatter',
+                x: years,
+                y: Array(years.length).fill(6.01),
+                mode: 'lines',
+                name: 'Flawed Democracy Threshold',
+                line: {
+                    color: 'rgba(247, 37, 133, 0.5)',
+                    width: 1,
+                    dash: 'dash'
+                }
+            };
+            
+            const data = [fullDemocracyLine, flawedDemocracyLine];
+            
+            if (trendType === 'all') {
+                // Add all countries
+                Object.keys(trends).forEach(country => {
+                    // Choose color based on average score
+                    const avgScore = trends[country].reduce((a, b) => a + b, 0) / trends[country].length;
+                    let color;
+                    if (avgScore >= 8.01) color = regimeColors['Full Democracy'];
+                    else if (avgScore >= 6.01) color = regimeColors['Flawed Democracy'];
+                    else if (avgScore >= 4.01) color = regimeColors['Hybrid Regime'];
+                    else color = regimeColors['Authoritarian'];
+                    
+                    data.push({
+                        type: 'scatter',
+                        x: years,
+                        y: trends[country],
+                        mode: 'lines+markers',
+                        name: country,
+                        line: {
+                            color: color,
+                            width: country === 'United States' ? 3 : 2
+                        },
+                        marker: {
+                            size: country === 'United States' ? 8 : 6
+                        }
+                    });
+                });
+            } else if (trendType === 'compare') {
+                // Add only US and Norway
+                data.push({
+                    type: 'scatter',
+                    x: years,
+                    y: trends['Norway'],
+                    mode: 'lines+markers',
+                    name: 'Norway',
+                    line: {
+                        color: regimeColors['Full Democracy'],
+                        width: 3
+                    },
+                    marker: {
+                        size: 8
                     }
                 });
-            });
-        });
-
-        // Form submission handler
-        const contactForm = document.getElementById('contactForm');
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            // Simulate form submission
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerText;
-            submitBtn.innerText = 'Sending...';
-            submitBtn.disabled = true;
+                
+                data.push({
+                    type: 'scatter',
+                    x: years,
+                    y: trends['United States'],
+                    mode: 'lines+markers',
+                    name: 'United States',
+                    line: {
+                        color: regimeColors['Flawed Democracy'],
+                        width: 3
+                    },
+                    marker: {
+                        size: 8
+                    }
+                });
+            } else if (trendType === 'borderline') {
+                // Add US and borderline countries
+                data.push({
+                    type: 'scatter',
+                    x: years,
+                    y: trends['United States'],
+                    mode: 'lines+markers',
+                    name: 'United States',
+                    line: {
+                        color: regimeColors['Flawed Democracy'],
+                        width: 3
+                    },
+                    marker: {
+                        size: 8
+                    }
+                });
+                
+                ['Hungary', 'Poland', 'Mexico'].forEach(country => {
+                    data.push({
+                        type: 'scatter',
+                        x: years,
+                        y: trends[country],
+                        mode: 'lines+markers',
+                        name: country,
+                        line: {
+                            color: '#FF5722',
+                            width: 2,
+                            dash: 'solid'
+                        },
+                        marker: {
+                            size: 6
+                        }
+                    });
+                });
+            }
             
-            // Simulate API call with timeout
-            setTimeout(() => {
-                alert('Message sent successfully! I will get back to you soon.');
-                contactForm.reset();
-                submitBtn.innerText = originalText;
-                submitBtn.disabled = false;
-            }, 1500);
-        });
-
-        // Animation on scroll
-        const animateElements = document.querySelectorAll('.animate');
-        const animateOnScroll = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = 1;
-                    animateOnScroll.unobserve(entry.target);
+            // Add US downgrade annotation
+            const annotations = [{
+                x: 2016,
+                y: 7.98,
+                text: 'US Downgraded to<br>Flawed Democracy',
+                showarrow: true,
+                arrowhead: 5,
+                ax: 0,
+                ay: -40
+            }];
+            
+            const layout = {
+                title: 'Democracy Index Trends (2015-2024)',
+                xaxis: {title: 'Year', tickmode: 'array', tickvals: years},
+                yaxis: {title: 'Democracy Index Score', range: [5.5, 10]},
+                annotations: annotations,
+                legend: {
+                    orientation: 'h',
+                    y: -0.15
+                },
+                hovermode: 'closest'
+            };
+            
+            Plotly.newPlot('democracy-trends', data, layout);
+        }
+        
+        // Create US vs Norway radar comparison
+        function createUSNorwayComparison() {
+            const dimensions = ['Electoral Process', 'Civil Liberties', 'Functioning of Govt', 'Political Participation', 'Political Culture'];
+            
+            const us = {
+                electoral: 9.17,
+                civil: 8.24,
+                functioning: 6.43,
+                participation: 7.78,
+                culture: 6.25
+            };
+            
+            const norway = {
+                electoral: 10.0,
+                civil: 9.71,
+                functioning: 9.64,
+                participation: 10.0,
+                culture: 10.0
+            };
+            
+            const data = [
+                {
+                    type: 'scatterpolar',
+                    r: [us.electoral, us.civil, us.functioning, us.participation, us.culture],
+                    theta: dimensions,
+                    fill: 'toself',
+                    name: 'United States',
+                    line: {color: regimeColors['Flawed Democracy']},
+                    fillcolor: regimeColors['Flawed Democracy'] + '40'
+                },
+                {
+                    type: 'scatterpolar',
+                    r: [norway.electoral, norway.civil, norway.functioning, norway.participation, norway.culture],
+                    theta: dimensions,
+                    fill: 'toself',
+                    name: 'Norway',
+                    line: {color: regimeColors['Full Democracy']},
+                    fillcolor: regimeColors['Full Democracy'] + '40'
                 }
+            ];
+            
+            const layout = {
+                polar: {
+                    radialaxis: {
+                        visible: true,
+                        range: [0, 10]
+                    }
+                },
+                showlegend: true,
+                title: 'Democratic Dimensions Comparison'
+            };
+            
+            Plotly.newPlot('us-norway-comparison', data, layout);
+        }
+        
+        // Create borderline explorer
+        function createBorderlineExplorer() {
+            const borderlineCountries = countries.filter(c => c.isBorderline);
+            
+            // Add a couple more for demonstration
+            borderlineCountries.push({
+                name: 'Tunisia',
+                electoral: 7.50,
+                civil: 6.47,
+                functioning: 5.36,
+                participation: 6.11,
+                culture: 5.63,
+                score: 6.08,
+                expertLabel: 'Flawed Democracy',
+                mlCluster: 'Cluster 3',
+                isBorderline: true
             });
-        }, { threshold: 0.1 });
-
-        animateElements.forEach(element => {
-            animateOnScroll.observe(element);
-        });
+            
+            // Prepare data for scatter plot
+            const trace = {
+                type: 'scatter',
+                x: borderlineCountries.map(c => c.functioning),
+                y: borderlineCountries.map(c => c.civil),
+                mode: 'markers+text',
+                text: borderlineCountries.map(c => c.name),
+                textposition: 'top',
+                marker: {
+                    size: borderlineCountries.map(c => c.score * 3),
+                    color: borderlineCountries.map(c => '#FF5722'),
+                    opacity: 0.7,
+                    line: {
+                        color: 'white',
+                        width: 2
+                    }
+                },
+                name: 'Borderline Countries'
+            };
+            
+            const layout = {
+                title: 'Borderline Countries: Functioning of Government vs Civil Liberties',
+                xaxis: {title: 'Functioning of Government', range: [4, 7]},
+                yaxis: {title: 'Civil Liberties', range: [5, 8]},
+                shapes: [
+                    // Hybrid/Flawed border region
+                    {
+                        type: 'rect',
+                        x0: 4, 
+                        y0: 5, 
+                        x1: 6.5, 
+                        y1: 7.5, 
+                        fillcolor: 'rgba(255,193,7,0.2)', 
+                        line: {width: 0}
+                    }
+                ],
+                annotations: [
+                    {
+                        x: 5.25,
+                        y: 6.25,
+                        text: 'Borderline<br>Region',
+                        showarrow: false,
+                        font: {size: 14, color: '#FF5722'}
+                    }
+                ],
+                height: 400
+            };
+            
+            Plotly.newPlot('borderline-explorer', [trace], layout);
+        }
+        
+        // Initialize all visualizations
+        window.onload = function() {
+            createDimensionDistribution();
+            createClusteringMethod('hierarchical');
+            createClusterComparison('comparison');
+            createFeatureRadar();
+            createDemocracyTrends('all');
+            createUSNorwayComparison();
+            createBorderlineExplorer();
+            
+            // Set up event listeners for interactive controls
+            document.querySelectorAll('[data-method]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('[data-method]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createClusteringMethod(this.dataset.method);
+                });
+            });
+            
+            document.querySelectorAll('[data-view]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('[data-view]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createClusterComparison(this.dataset.view);
+                });
+            });
+            
+            document.querySelectorAll('[data-trend]').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.querySelectorAll('[data-trend]').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createDemocracyTrends(this.dataset.trend);
+                });
+            });
+            
+            // Intersection Observer for fade-in animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            document.querySelectorAll('.story-section').forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Smooth scrolling for nav links
+            document.querySelectorAll('.nav-item').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Update active nav item
+                    document.querySelectorAll('.nav-item').forEach(navItem => {
+                        navItem.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                });
+            });
+        };
     </script>
 </body>
 </html>
