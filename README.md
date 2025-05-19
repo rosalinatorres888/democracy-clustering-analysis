@@ -19,6 +19,27 @@ Key findings include:
 - Patterns of regional democratic development
 - Insights into the relationship between various democracy indicators
 
+## 🧪 Methodology & Workflow
+
+### ▶ Data Ingestion & Cleaning
+
+- Cleaned and standardized Democracy Index
+- Removed missing values and normalized features
+
+### ▶ Dimensionality Reduction
+
+- Applied PCA: retained 4 components (82% variance explained)
+
+### ▶ Clustering
+
+- Used **K-Means** and **Agglomerative Clustering**
+- Chose optimal k using Elbow + Silhouette analysis
+
+### ▶ Evaluation
+
+- Compared clusters with regime types (full, flawed, hybrid, authoritarian)
+- Created **Democratic Stability Index** to flag borderline cases
+
 ## Technologies Used
 - Python
 - scikit-learn
