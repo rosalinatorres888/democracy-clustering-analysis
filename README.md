@@ -145,7 +145,7 @@ Built as part of **MS in Data Analytics Engineering @ Northeastern University**
 
 ## 📫 Connect
 
-- **LinkedIn:** [linkedin.com/in/rosalinatorres](https://linkedin.com/in/rosalinatorres)
+- **LinkedIn:** [linkedin.com/in/rosalinatorres](https://linkedin.com/in/rosalina-torres)
 - **Portfolio:** [rosalinatorres888.github.io](https://rosalinatorres888.github.io)
 - **Email:** torres.ros@northeastern.edu
 
