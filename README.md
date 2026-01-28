@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="images/banner.svg" alt="Project Banner" width="100%">
+  <img src="images/democracy-clustering-banner.svg" alt="Project Banner" width="100%">
 </p>
 
 ![Status](https://img.shields.io/badge/Status-Complete-success?style=flat-square)
