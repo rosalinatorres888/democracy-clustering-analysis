@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img src="images/banner.svg" alt="Project Banner" width="100%">
+</p>
+
 ![Status](https://img.shields.io/badge/Status-Complete-success?style=flat-square)
 ![R](https://img.shields.io/badge/R-276DC3?style=flat-square&logo=r&logoColor=white)
 ![Clustering](https://img.shields.io/badge/K--means-Unsupervised-blueviolet?style=flat-square)
