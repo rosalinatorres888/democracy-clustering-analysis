@@ -4,6 +4,8 @@
 
 A research-grade political data science project combining K-means, hierarchical clustering, PCA, t-SNE, and XGBoost surrogate models to uncover democracy patterns in global governance data. Part 1 applies unsupervised clustering to the EIU Democracy Index. Part 2 extends the analysis with Freedom House internet freedom data and SHAP explainability to explain why countries like Hungary and India defy simple classification.
 
+**[🌐 View Live Interactive Dashboard →](https://rosalinatorres888.github.io/democracy-clustering-analysis/index.html)**
+
 [![Status](https://img.shields.io/badge/Status-Complete-success?style=flat-square)](https://github.com/rosalinatorres888/democracy-clustering-analysis)
 [![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat-square&logo=python&logoColor=white)](https://python.org)
 [![Clustering](https://img.shields.io/badge/K--means-Unsupervised-blueviolet?style=flat-square)](https://github.com/rosalinatorres888/democracy-clustering-analysis)
@@ -247,4 +249,6 @@ MIT License — See LICENSE file for details
 - Electoral process: **0.86**
 
 Open `democracy_clustering_dashboard.html` directly in any browser — no server required.
+
+**Live:** [rosalinatorres888.github.io/democracy-clustering-analysis/index.html](https://rosalinatorres888.github.io/democracy-clustering-analysis/index.html)
 
