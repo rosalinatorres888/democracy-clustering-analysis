@@ -219,3 +219,32 @@ MIT License — See LICENSE file for details
 ---
 
 *Part of an ML/AI engineering portfolio demonstrating unsupervised learning, dimensionality reduction, model explainability, and political data science.*
+
+---
+
+## Interactive Dashboard
+
+**`democracy_clustering_dashboard.html`** — a standalone 5-section interactive dashboard built with Plotly.js:
+
+| Section | Content |
+|---|---|
+| **01 Country Explorer** | Radar chart for any country across all 5 EIU dimensions + borderline flags |
+| **02 US Decline** | Bar chart of dimensional scores + historical trend (2015–2024) |
+| **03 Democracy Clustering** | Scatter plot with toggleable cluster boundaries + 3-method comparison |
+| **04 Trends** | Line chart 2017–2024 — all countries, US vs Norway, borderline cases |
+| **05 Key Insights** | Research summary with correlation findings |
+
+**Clustering method comparison (Adjusted Rand Index vs expert labels):**
+
+| Method | ARI Score | Notes |
+|---|---|---|
+| Hierarchical Clustering | **0.78** | Best alignment with EIU expert classifications |
+| K-Means | 0.57 | Good overall, less precise at regime boundaries |
+| Gaussian Mixture Model | 0.52 | Probabilistic — useful for borderline cases |
+
+**Feature correlations with regime type:**
+- Civil liberties: **0.90**
+- Electoral process: **0.86**
+
+Open `democracy_clustering_dashboard.html` directly in any browser — no server required.
+
