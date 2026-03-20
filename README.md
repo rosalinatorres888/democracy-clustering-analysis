@@ -252,3 +252,15 @@ Open `democracy_clustering_dashboard.html` directly in any browser — no server
 
 **Live:** [rosalinatorres888.github.io/democracy-clustering-analysis/index.html](https://rosalinatorres888.github.io/democracy-clustering-analysis/index.html)
 
+
+---
+
+## Limitations & Algorithmic Assumptions
+
+This analysis relies on multidimensional clustering and surrogate explainability models. As with any machine learning architecture applied to sociopolitical data, it is critical to state the epistemological boundaries of the pipeline:
+
+- **The Input Data is Quantified Consensus, Not Physical Law:** The EIU Democracy Index is a highly engineered composite of qualitative assessments made by human analysts. By feeding these dimensions into a K-means algorithm, the model is not discovering an absolute, objective political reality. Rather, it is successfully mapping the underlying mathematical geometry of expert consensus. The fact that an unlabeled algorithm recreated expert regime classifications (ARI: 0.78) proves the internal structural consistency of that consensus.
+
+- **Time-Series Shifts Reflect Grader Penalties:** When the algorithm isolates 2016 as a breakpoint for the United States, it is not independently "discovering" election interference. It is plotting the exact mathematical penalty applied by EIU human graders to the "Political Culture" and "Functioning of Government" dimensions. The value of the clustering model is that it proves this penalty was not just statistical noise — it was mathematically severe enough to fundamentally alter the country's position within the high-dimensional space.
+
+- **Surrogate Explainability is Not Ground Truth:** In Part 2, an XGBoost surrogate model and SHAP TreeExplainer are used to calculate feature importance for the clusters. Because K-means forces data into spheres, XGBoost is learning how to predict K-means' arbitrary boundaries, not necessarily the ground-truth "soul" of a country. The SHAP values are explicitly designed to explain the mechanics of the algorithmic clustering decision, not to serve as an objective oracle. It transforms an opaque mathematical grouping into an interpretable one.
